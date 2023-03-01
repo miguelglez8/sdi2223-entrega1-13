@@ -2,12 +2,12 @@ package com.uniovi.sdimywallapop.services;
 
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.UsersRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 

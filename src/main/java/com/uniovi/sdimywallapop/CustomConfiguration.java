@@ -17,18 +17,7 @@ import java.util.Locale;
 
 @Configuration
 public class CustomConfiguration implements WebMvcConfigurer {
-    @Value("${spring.data.web.pageable.page-parameter}")
-    private int page;
-    @Value("${spring.data.web.pageable.default-page-size}")
-    private int pageSize;
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        int page = 0;
-        int size = 5;
-        PageableHandlerMethodArgumentResolver resolver = new PageableHandlerMethodArgumentResolver();
-        resolver.setFallbackPageable(PageRequest.of(page, pageSize));
-        argumentResolvers.add(resolver);
-    }
+
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();

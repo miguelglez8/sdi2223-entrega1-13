@@ -1,6 +1,7 @@
 package com.uniovi.sdimywallapop.entities;
 
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
