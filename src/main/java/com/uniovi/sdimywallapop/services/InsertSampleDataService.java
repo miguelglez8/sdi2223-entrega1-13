@@ -1,5 +1,6 @@
 package com.uniovi.sdimywallapop.services;
 
+import com.uniovi.sdimywallapop.entities.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,12 @@ public class InsertSampleDataService {
         usersService.addUser(user4);
         usersService.addUser(user5);
 
+        Set user1Offers = new HashSet<Offer>() {
+            {
+                add(new Offer("Oferta 1", "hibads", 24));
+                add(new Offer("Oferta 2", "fdsfdsfds", 14));
+            }
+        };
+        user1.setOffers(user1Offers);
     }
 }
