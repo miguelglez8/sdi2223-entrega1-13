@@ -2,6 +2,7 @@ package com.uniovi.sdimywallapop.entities;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -19,6 +20,9 @@ public class User {
 
     @Transient //propiedad que no se almacena en la tabla.
     private String passwordConfirm;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Offer> offers;
 
     public User(String dni, String name, String lastName) {
         super();
@@ -65,5 +69,11 @@ public class User {
     }
     public void setRole(String role) {
         this.role = role;
+    }
+    public Set<Offer> getOffers() {
+        return offers;
+    }
+    public void setOffers(Set user1Offers) {
+        this.offers = user1Offers;
     }
 }
