@@ -34,13 +34,6 @@ public class InsertSampleDataService {
         user5.setPassword("123456");
         user5.setRole(rolesService.getRoles()[1]);
 
-
-        usersService.addUser(user1);
-        usersService.addUser(user2);
-        usersService.addUser(user3);
-        usersService.addUser(user4);
-        usersService.addUser(user5);
-
         Set user1Offers = new HashSet<Offer>() {
             {
                 add(new Offer("Oferta 1", "Texto1", "Detalles1", 24));
@@ -52,5 +45,11 @@ public class InsertSampleDataService {
             }
         };
         user1.setOffers(user1Offers);
+
+        usersService.addUser(user1);
+        usersService.addUser(user2);
+        usersService.addUser(user3);
+        usersService.addUser(user4);
+        usersService.addUser(user5);
     }
 }
