@@ -43,7 +43,14 @@
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
-                <td><a th:href="${'/offer/delete/' + offer.id}">eliminar</a>
+                <td>
+                    <div th:if="${offer.isSold()==false}">
+                        <a th:href="${'/offer/buy/' + offer.id}"> Comprar </a>
+                    </div>
+                    <div th:if="${offer.isSold()==true}">
+                        <a>Vendido</a>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
