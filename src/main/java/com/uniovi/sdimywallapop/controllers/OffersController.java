@@ -38,8 +38,7 @@ public class OffersController {
                           @RequestParam(value="", required = false) String searchText){
         Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
         if (searchText != null && !searchText.isEmpty()) {
-            offers =
-                    offersService.searchOffersByTitle(pageable, searchText);
+            offers = offersService.searchOffersByTitle(pageable, searchText);
         } else {
             offers = offersService.getOffers(pageable);
         }

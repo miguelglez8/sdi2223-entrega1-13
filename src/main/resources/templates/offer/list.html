@@ -3,8 +3,16 @@
 <head th:replace="fragments/head"/>
 <body>
 <head th:replace="fragments/nav"/>
-
 <div class="container" id="main-container">
+    <h2>Ofertas</h2>
+    <form class="form-inline" action="/offer/list">
+        <div class="form-group">
+            <input name="searchText" type="text" class="form-control" size="50"
+                   placeholder="Buscar por título de la oferta">
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <p>Las ofertas que actualmente figuran en el sistema son las siguientes:</p>
     <button type="button" id="updateButton" class="btn btn-primary">Actualizar</button>
     <script th:inline="javascript">
         /*<![CDATA[*/
@@ -31,10 +39,10 @@
             </thead>
             <tbody>
             <tr th:each="offer : ${offerList}">
-                <td th:text="${offer.title}"> Título oferta 1</td>
-                <td th:text="${offer.description}"> Descripción</td>
-                <td th:text="${offer.details}"> Detalles</td>
-                <td th:text="${#strings.concat(offer.price,'€')}">Precio</td>
+                <td th:text="${offer.title}"></td>
+                <td th:text="${offer.description}"></td>
+                <td th:text="${offer.details}"></td>
+                <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td><a th:href="${'/offer/delete/' + offer.id}">eliminar</a>
             </tr>
             </tbody>

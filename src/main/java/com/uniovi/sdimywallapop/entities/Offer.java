@@ -15,6 +15,16 @@ public class Offer {
     private String details;
     private double price;
 
+    public boolean isSold() {
+        return isSold;
+    }
+
+    public void setSold(boolean sold) {
+        isSold = sold;
+    }
+
+    private boolean isSold;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -29,6 +39,7 @@ public class Offer {
         this.creationDate = creationDate;
         this.details = details;
         this.price = price;
+        this.isSold = false;
     }
 
     public Offer(String title, String description, String details, double price){
@@ -38,6 +49,7 @@ public class Offer {
         this.details = details;
         this.creationDate = new Date();
         this.price = price;
+        this.isSold = false;
     }
 
     public Long getId() {
