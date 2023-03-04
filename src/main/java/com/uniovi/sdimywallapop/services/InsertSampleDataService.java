@@ -45,6 +45,10 @@ public class InsertSampleDataService {
             {
                 add(new Offer("Oferta 1", "Texto1", "Detalles1", 24));
                 add(new Offer("Oferta 2", "Texto2", "Detalles2", 14));
+                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14));
+                add(new Offer("Oferta 4", "Texto4", "Detalles4", 14));
+                add(new Offer("Oferta 5", "Texto5", "Detalles5", 14));
+                add(new Offer("Oferta 6", "Texto6", "Detalles6", 14));
             }
         };
         user1.setOffers(user1Offers);
