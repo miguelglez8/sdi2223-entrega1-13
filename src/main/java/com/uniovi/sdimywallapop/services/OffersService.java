@@ -54,4 +54,13 @@ public class OffersService {
         offers = offersRepository.searchByTitle(pageable, searchText);
         return offers;
     }
+
+    public void soldOffer(Offer offer) {
+        offer.setSold(true);
+        addOffer(offer);
+    }
+
+    public Offer searchById(Long id) {
+        return offersRepository.findById(id).get();
+    }
 }

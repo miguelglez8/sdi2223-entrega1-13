@@ -5,13 +5,16 @@
 <head th:replace="fragments/nav"/>
 <div class="container" id="main-container">
     <h2>Ofertas</h2>
-    <form class="form-inline" action="/offer/list">
+    <form class="form-inline" action="/offer/list" th:object="${user}">
         <div class="form-group">
             <input name="searchText" type="text" class="form-control" size="50"
                    placeholder="Buscar por título de la oferta">
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
+    <div class="form-group">
+        <h3>Saldo disponible en €: <p th:text="${user.money}"></p> </h3>
+    </div>
     <p>Las ofertas que actualmente figuran en el sistema son las siguientes:</p>
     <button type="button" id="updateButton" class="btn btn-primary">Actualizar</button>
     <script th:inline="javascript">
@@ -54,7 +57,7 @@
             </tr>
             </tbody>
         </table>
-        <div th:if="${#lists.isEmpty(offerList)}"> No offers</div>
+        <div th:if="${#lists.isEmpty(offerList)}"> Sin ofertas</div>
     </div>
     <footer th:replace="fragments/pagination"></footer>
 </div>
