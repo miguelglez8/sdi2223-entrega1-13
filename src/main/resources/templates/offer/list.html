@@ -19,32 +19,30 @@
         /*]]>*/
     </script>
     <div class="table-responsive">
-        <table class="table table-hover">
-            <table class="table table-hover" th:fragment="tableOffers" id="tableOffers">
-                <thead>
-                <tr>
-                    <th scope="col">id</th>
-                    <th scope="col">Título</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="offer : ${offerList}">
-                    <td scope="row" th:text="${offer.id}"> 1</td>
-                    <td th:text="${offer.title}"> Título oferta 1</td>
-                    <td th:text="${offer.description}"> Descripción oferta 1</td>
-                    <td th:text="${#strings.concat(offer.price,'€')}">Precio</td>
-                    <td><a th:href="${'/offer/delete/' + offer.id}">eliminar</a>
-                </tr>
-                </tbody>
-            </table>
+        <table class="table table-hover" th:fragment="tableOffers" id="tableOffers">
+            <thead>
+            <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Detalles</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="offer : ${offerList}">
+                <td th:text="${offer.title}"> Título oferta 1</td>
+                <td th:text="${offer.description}"> Descripción</td>
+                <td th:text="${offer.details}"> Detalles</td>
+                <td th:text="${#strings.concat(offer.price,'€')}">Precio</td>
+                <td><a th:href="${'/offer/delete/' + offer.id}">eliminar</a>
+            </tr>
+            </tbody>
         </table>
+        <div th:if="${#lists.isEmpty(offerList)}"> No offers</div>
     </div>
-    <div th:if="${#lists.isEmpty(offerList)}"> No offers</div>
+    <footer th:replace="fragments/pagination"></footer>
 </div>
-</div>
-
+<footer th:replace="fragments/footer"></footer>
 </body>
 </html>

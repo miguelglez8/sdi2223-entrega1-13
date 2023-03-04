@@ -12,6 +12,7 @@ public class Offer {
     private String title;
     private String description;
     private Date creationDate;
+    private String details;
     private double price;
 
     @ManyToOne
@@ -21,18 +22,20 @@ public class Offer {
     public Offer() {
     }
 
-    public Offer(Long id, String title, String description, Date creationDate, double price) {
+    public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.creationDate = creationDate;
+        this.details = details;
         this.price = price;
     }
 
-    public Offer(String title, String description, double price){
+    public Offer(String title, String description, String details, double price){
         super();
         this.title = title;
         this.description = description;
+        this.details = details;
         this.creationDate = new Date();
         this.price = price;
     }
@@ -43,6 +46,14 @@ public class Offer {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public String getTitle() {

@@ -43,8 +43,8 @@ public class InsertSampleDataService {
 
         Set user1Offers = new HashSet<Offer>() {
             {
-                add(new Offer("Oferta 1", "hibads", 24));
-                add(new Offer("Oferta 2", "fdsfdsfds", 14));
+                add(new Offer("Oferta 1", "Texto1", "Detalles1", 24));
+                add(new Offer("Oferta 2", "Texto2", "Detalles2", 14));
             }
         };
         user1.setOffers(user1Offers);
