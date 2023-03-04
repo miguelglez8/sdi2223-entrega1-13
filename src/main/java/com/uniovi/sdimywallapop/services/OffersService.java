@@ -6,6 +6,7 @@ import com.uniovi.sdimywallapop.repositories.OffersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,11 @@ public class OffersService {
         return offers;
     }
 
+    public Page<Offer> getOffers(Pageable pageable) {
+        Page<Offer> offers = offersRepository.findAll(pageable);
+        return offers;
+    }
+
     public Offer getOffer(Long id) {
         return offersRepository.findById(id).get();
     }
@@ -39,6 +45,13 @@ public class OffersService {
     public Object getOffersForUser(User user) {
         List<Offer> offers = new LinkedList<Offer>();
         offers = offersRepository.findAllByUser(user);
+        return offers;
+    }
+
+    public Page<Offer> searchOffersByTitle(Pageable pageable, String searchText) {
+        Page<Offer> offers = new PageImpl<>(new LinkedList<Offer>());
+        searchText = "%"+searchText+"%";
+        offers = offersRepository.searchByTitle(pageable, searchText);
         return offers;
     }
 }

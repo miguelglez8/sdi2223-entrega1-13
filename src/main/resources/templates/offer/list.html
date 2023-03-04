@@ -5,9 +5,22 @@
 <head th:replace="fragments/nav"/>
 
 <div class="container" id="main-container">
+    <button type="button" id="updateButton" class="btn btn-primary">Actualizar</button>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $( "#updateButton" ).click(function() {
+            let numberPage = [[${param.page}]];
+            let urlUpdate = '/offer/list/update';
+            if (numberPage != null ){
+                urlUpdate += "?page="+numberPage[0];
+            }
+            $("#tableOffers").load(urlUpdate);
+        });
+        /*]]>*/
+    </script>
     <div class="table-responsive">
         <table class="table table-hover">
-            <table class="table table-hover" id="tableOffers">
+            <table class="table table-hover" th:fragment="tableOffers" id="tableOffers">
                 <thead>
                 <tr>
                     <th scope="col">id</th>
