@@ -25,5 +25,4 @@ public class OfferBuyValidator implements Validator {
 
 
     }
-
 }

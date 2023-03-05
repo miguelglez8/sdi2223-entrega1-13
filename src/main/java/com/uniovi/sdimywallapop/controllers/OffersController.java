@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.LinkedList;
-import java.util.List;
 
 @Controller
 public class OffersController {
@@ -85,17 +84,14 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, @PathVariable Long id, Principal principal, @Validated Offer offe, BindingResult result){
+    public String buyOffer(Model model, @PathVariable Long id, Principal principal){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
         Offer offer = offersService.searchById(id);
-        offerBuyValidator.validate(offer, result);
-        if(result.hasErrors()) {
-            model.addAttribute("offerList", offersService.getOffers());
-            return "offer/list";
-        }
+        model.addAttribute("offer", offer);
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user.getDni());
+        model.addAttribute("offer", offer);
         return "redirect:/offer/list";
     }
 

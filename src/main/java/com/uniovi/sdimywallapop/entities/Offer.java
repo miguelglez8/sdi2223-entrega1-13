@@ -5,7 +5,6 @@ import java.util.Date;
 
 @Entity
 public class Offer {
-
     @Id
     @GeneratedValue
     private Long id;
