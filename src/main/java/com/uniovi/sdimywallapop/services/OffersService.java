@@ -55,12 +55,17 @@ public class OffersService {
         return offers;
     }
 
-    public void soldOffer(Offer offer) {
+    public void soldOffer(Offer offer, String dni) {
         offer.setSold(true);
+        offer.setDniComprador(dni);
         addOffer(offer);
     }
 
     public Offer searchById(Long id) {
         return offersRepository.findById(id).get();
+    }
+
+    public List<Offer> getOffersByDni(String dni) {
+        return offersRepository.findAllByComprador(dni);
     }
 }

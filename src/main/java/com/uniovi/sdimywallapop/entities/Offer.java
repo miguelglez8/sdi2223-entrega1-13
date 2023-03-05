@@ -13,7 +13,10 @@ public class Offer {
     private String description;
     private Date creationDate;
     private String details;
+    private String email;
     private double price;
+    private boolean isSold;
+    private String comprador;
 
     public boolean isSold() {
         return isSold;
@@ -22,8 +25,6 @@ public class Offer {
     public void setSold(boolean sold) {
         isSold = sold;
     }
-
-    private boolean isSold;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -42,7 +43,7 @@ public class Offer {
         this.isSold = false;
     }
 
-    public Offer(String title, String description, String details, double price){
+    public Offer(String title, String description, String details, double price, User user, String email){
         super();
         this.title = title;
         this.description = description;
@@ -50,6 +51,24 @@ public class Offer {
         this.creationDate = new Date();
         this.price = price;
         this.isSold = false;
+        this.user = user;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getComprador() {
+        return comprador;
+    }
+
+    public void setDniComprador(String dniComprador) {
+        this.comprador = dniComprador;
     }
 
     public Long getId() {

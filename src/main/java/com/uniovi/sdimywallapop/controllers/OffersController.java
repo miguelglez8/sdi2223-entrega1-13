@@ -4,6 +4,7 @@ import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.services.OffersService;
 import com.uniovi.sdimywallapop.services.UsersService;
+import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
 import com.uniovi.sdimywallapop.validators.OfferFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,13 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class OffersController {
@@ -32,6 +31,9 @@ public class OffersController {
 
     @Autowired
     private OfferFormValidator offerFormValidator;
+
+    @Autowired
+    private OfferBuyValidator offerBuyValidator;
 
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
@@ -58,6 +60,23 @@ public class OffersController {
         return "offer/list :: tableOffers";
     }
 
+    @RequestMapping("/offer/listBuy")
+    public String getListBuy(Model model, Principal principal,
+                          @RequestParam(value="", required = false) String searchText){
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        return "offer/listBuy";
+    }
+
+    @RequestMapping("/offer/list/updateBuy")
+    public String updateListB(Model model, Principal principal) {
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        return "offer/listBuy :: tableOffersB";
+    }
+
     @RequestMapping(value = "/offer/add")
     public String getOffer(Model model) {
         model.addAttribute("offerList", offersService.getOffers());
@@ -66,12 +85,17 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, @PathVariable Long id, Principal principal){
+    public String buyOffer(Model model, @PathVariable Long id, Principal principal, @Validated Offer offe, BindingResult result){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
         Offer offer = offersService.searchById(id);
+        offerBuyValidator.validate(offer, result);
+        if(result.hasErrors()) {
+            model.addAttribute("offerList", offersService.getOffers());
+            return "offer/list";
+        }
         usersService.decrementMoney(user, offer.getPrice());
-        offersService.soldOffer(offer);
+        offersService.soldOffer(offer, user.getDni());
         return "redirect:/offer/list";
     }
 

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head"/>
+<body>
+<head th:replace="fragments/nav"/>
+<div class="container" id="main-container">
+  <h2>Ofertas compradas por el usuario</h2>
+  <p>Las ofertas que actualmente figuran en el sistema son las siguientes:</p>
+  <button type="button" id="updateButton" class="btn btn-primary">Actualizar</button>
+  <script>
+    $( "#updateButton" ).click(function() {
+      $("#tableOffersB").load('/offer/list/updateBuy');
+    });
+  </script>
+  <div class="table-responsive">
+    <table class="table table-hover" th:fragment="tableOffersB" id="tableOffersB">
+      <thead>
+      <tr>
+        <th scope="col">Título</th>
+        <th scope="col">Detalles</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Email del vendedor</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="offer : ${offerListB}">
+        <td th:text="${offer.title}"></td>
+        <td th:text="${offer.details}"></td>
+        <td th:text="${offer.price}"></td>
+        <td th:text="${offer.email}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(offerListB)}"> Sin ofertas compradas</div>
+  </div>
+</div>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>
