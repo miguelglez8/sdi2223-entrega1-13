@@ -36,6 +36,8 @@ public class OffersController {
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
                           @RequestParam(value="", required = false) String searchText){
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
         Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
         if (searchText != null && !searchText.isEmpty()) {
             offers = offersService.searchOffersByTitle(pageable, searchText);
@@ -44,6 +46,7 @@ public class OffersController {
         }
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
+        model.addAttribute("user", user);
 
         return "offer/list";
     }
@@ -62,11 +65,21 @@ public class OffersController {
         return "offer/add";
     }
 
+    @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
+    public String buyOffer(Model model, @PathVariable Long id, Principal principal){
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        Offer offer = offersService.searchById(id);
+        usersService.decrementMoney(user, offer.getPrice());
+        offersService.soldOffer(offer);
+        return "redirect:/offer/list";
+    }
+
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
     public String setOffer(Model model, @Validated Offer offer, BindingResult result) {
         offerFormValidator.validate(offer, result);
         if (result.hasErrors()) {
-            model.addAttribute("offersList", offersService.getOffers());
+            model.addAttribute("offerList", offersService.getOffers());
             return "offer/add";
         }
         offersService.addOffer(offer);

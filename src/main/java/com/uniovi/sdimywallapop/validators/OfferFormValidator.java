@@ -1,7 +1,9 @@
 package com.uniovi.sdimywallapop.validators;
 
 import com.uniovi.sdimywallapop.entities.Offer;
+import com.uniovi.sdimywallapop.entities.User;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -22,5 +24,16 @@ public class OfferFormValidator implements Validator {
         if (offer.getTitle().length() < 3 || offer.getTitle().length() > 30) {
             errors.rejectValue("title", "Error.offer.title.lenght");
         }
+        if (offer.getUser().getMoney() < offer.getPrice()) {
+            errors.rejectValue("price", "Error.offer.price.minus");
+        }
+        if (offer.isSold()) {
+            errors.rejectValue("sold", "Error.offer.sold");
+        }
+        if (offer.getUser().getId().equals(offer.getUser().getId())) {
+            errors.rejectValue("user", "Error.offer.user");
+        }
+
     }
+
 }
