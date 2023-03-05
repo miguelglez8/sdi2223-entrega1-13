@@ -22,12 +22,12 @@
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="offerDropdown" role="button" data-toggle="dropdown"
-                   arias-haspopup="true" aria-expanded="false">Gestión de ofertas
+                   arias-haspopup="true" aria-expanded="false" th:text="#{nav.offer.management}">
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/offer/list">Ver ofertas</a>
-                    <a class="dropdown-item" href="/offer/listBuy">Ver ofertas compradas</a>
-                    <a class="dropdown-item" href="/offer/add">Añadir ofertas</a>
+                    <a class="dropdown-item" href="/offer/list" th:text="#{nav.offer.show}"></a>
+                    <a class="dropdown-item" href="/offer/listBuy" th:text="#{nav.offer.show.bought}"></a>
+                    <a class="dropdown-item" href="/offer/add" th:text="#{nav.offer.add}"></a>
                 </div>
             </li>
         </ul>
