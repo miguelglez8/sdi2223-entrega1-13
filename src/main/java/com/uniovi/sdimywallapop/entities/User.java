@@ -9,13 +9,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     @Column(unique = true)
     private String dni;
     private String name;
     private String lastName;
     private String role;
-
+    private double money;
     private String password;
 
     @Transient //propiedad que no se almacena en la tabla.
@@ -29,6 +29,7 @@ public class User {
         this.dni = dni;
         this.name = name;
         this.lastName = lastName;
+        this.money = 100.0;
     }
 
     public String getPassword() {
@@ -45,8 +46,8 @@ public class User {
     }
 
     public User() { }
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public String getDni() {return dni; }
     public void setDni(String dni) { this.dni = dni; }
     public String getName() {
@@ -75,5 +76,17 @@ public class User {
     }
     public void setOffers(Set user1Offers) {
         this.offers = user1Offers;
+    }
+
+    public double getMoney() {
+        return money;
+    }
+
+    public void setMoney(double money) {
+        this.money = money;
+    }
+
+    public void decrementMoney(double price) {
+        this.money -= price;
     }
 }

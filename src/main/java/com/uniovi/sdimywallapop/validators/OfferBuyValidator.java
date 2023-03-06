@@ -1,14 +1,12 @@
 package com.uniovi.sdimywallapop.validators;
 
 import com.uniovi.sdimywallapop.entities.Offer;
-import com.uniovi.sdimywallapop.entities.User;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class OfferFormValidator implements Validator {
+public class OfferBuyValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
         return Offer.class.equals(clazz);
@@ -18,13 +16,13 @@ public class OfferFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Offer offer = (Offer) target;
 
-        if (offer.getPrice() < 0) {
-            errors.rejectValue("price", "Error.offer.price.negative");
+        if (offer.getUser().getMoney() < offer.getPrice()) {
+            errors.rejectValue("price", "Error.offer.price.minus");
         }
-        if (offer.getTitle().length() < 3 || offer.getTitle().length() > 30) {
-            errors.rejectValue("title", "Error.offer.title.lenght");
+        if (offer.isSold()) {
+            errors.rejectValue("sold", "Error.offer.sold");
         }
+
 
     }
-
 }

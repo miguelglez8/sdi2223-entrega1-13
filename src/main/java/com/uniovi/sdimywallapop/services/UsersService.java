@@ -40,9 +40,12 @@ public class UsersService {
         return usersRepository.findByDni(dni);
     }
 
-
     public void deleteUser(Long id) {
         usersRepository.deleteById(id);
+    }
+    public void decrementMoney(User user, double price) {
+        user.decrementMoney(price);
+        usersRepository.save(user);
     }
 }
 
