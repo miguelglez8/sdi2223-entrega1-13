@@ -88,10 +88,9 @@ public class OffersController {
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
         Offer offer = offersService.searchById(id);
-        model.addAttribute("offer", offer);
+        model.addAttribute("user", user);
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user.getDni());
-        model.addAttribute("offer", offer);
         return "redirect:/offer/list";
     }
 

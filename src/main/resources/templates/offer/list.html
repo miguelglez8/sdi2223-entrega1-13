@@ -48,7 +48,7 @@
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td>
                     <div th:if="${offer.isSold()==false}">
-                        <a th:href="${'/offer/buy/'+offer.id}" th:object="${offer}" th:text="#{offer.list.buy}"></a>
+                        <a th:href="${'/offer/buy/'+offer.id}" th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">
                         <a th:text="#{offer.list.sold}"></a>
