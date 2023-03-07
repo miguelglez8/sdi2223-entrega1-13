@@ -60,7 +60,7 @@ public class OffersController {
                           @RequestParam(value="", required = false) String searchText){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy";
     }
 
@@ -68,7 +68,7 @@ public class OffersController {
     public String updateListB(Model model, Principal principal) {
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy :: tableOffersB";
     }
 
@@ -88,6 +88,8 @@ public class OffersController {
         Page<Offer> offers = offersService.getOffers(pageable);
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("user", user);
+        model.addAttribute("page", offers);
+        // VALIDADOR DE SERVICIO -> Lista de errores
         if (offer.getUser().getMoney() < offer.getPrice()) {
             model.addAttribute("error1", "Error.offer.price.minus");
             error = true;
@@ -101,8 +103,9 @@ public class OffersController {
         if (error==true) {
             return "offer/list";
         }
+        //
         usersService.decrementMoney(user, offer.getPrice());
-        offersService.soldOffer(offer, user.getDni());
+        offersService.soldOffer(offer, user.getId());
         return "redirect:/offer/list";
     }
 

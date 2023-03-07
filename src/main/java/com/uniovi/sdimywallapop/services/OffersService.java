@@ -55,9 +55,9 @@ public class OffersService {
         return offers;
     }
 
-    public void soldOffer(Offer offer, String dni) {
+    public void soldOffer(Offer offer, Long id) {
         offer.setSold(true);
-        offer.setDniComprador(dni);
+        offer.setComprador(id);
         addOffer(offer);
     }
 
@@ -65,7 +65,7 @@ public class OffersService {
         return offersRepository.findById(id).get();
     }
 
-    public List<Offer> getOffersByDni(String dni) {
-        return offersRepository.findAllByComprador(dni);
+    public List<Offer> getOffersByUserId(Long id) {
+        return offersRepository.findAllByComprador(id);
     }
 }

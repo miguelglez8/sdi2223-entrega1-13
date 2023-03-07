@@ -8,7 +8,7 @@
     <form class="form-inline" action="/offer/list">
         <div class="form-group">
             <input name="searchText" type="text" class="form-control" size="50"
-                   placeholder="Buscar por título de la oferta">
+                   th:placeholder="#{offer.list.search.title}">
         </div>
         <button type="submit" class="btn btn-primary" th:text="#{offer.list.search}"></button>
     </form>
@@ -56,9 +56,6 @@
                 </td>
             </tr>
             </tbody>
-            <p th:text="${error1}"> </p>
-            <p th:text="${error2}"> </p>
-            <p th:text="${error3}"> </p>
         </table>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>

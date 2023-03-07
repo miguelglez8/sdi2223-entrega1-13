@@ -12,10 +12,9 @@ public class Offer {
     private String description;
     private Date creationDate;
     private String details;
-    private String email;
     private double price;
     private boolean isSold;
-    private String comprador;
+    private Long comprador;
 
     public boolean isSold() {
         return isSold;
@@ -42,7 +41,7 @@ public class Offer {
         this.isSold = false;
     }
 
-    public Offer(String title, String description, String details, double price, User user, String email){
+    public Offer(String title, String description, String details, double price, User user){
         super();
         this.title = title;
         this.description = description;
@@ -51,23 +50,14 @@ public class Offer {
         this.price = price;
         this.isSold = false;
         this.user = user;
-        this.email = email;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getComprador() {
+    public Long getComprador() {
         return comprador;
     }
 
-    public void setDniComprador(String dniComprador) {
-        this.comprador = dniComprador;
+    public void setComprador(Long comprador) {
+        this.comprador = comprador;
     }
 
     public Long getId() {

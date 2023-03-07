@@ -19,34 +19,34 @@ public class InsertSampleDataService {
     private RolesService rolesService;
     @PostConstruct
     public void init() {
-        User user1 = new User("99999990A", "Pedro", "Díaz");
+        User user1 = new User("99999990A", "Pedro", "Díaz", "UO282337@uniovi.es");
         user1.setPassword("123456");
         user1.setRole(rolesService.getRoles()[0]);
-        User user2 = new User("99999991B", "Lucas", "Núñez");
+        User user2 = new User("99999991B", "Lucas", "Núñez", "UO281337@uniovi.es");
         user2.setPassword("123456");
         user2.setRole(rolesService.getRoles()[0]);
-        User user3 = new User("99999992C", "María", "Rodríguez");
+        User user3 = new User("99999992C", "María", "Rodríguez", "UO282117@uniovi.es");
         user3.setPassword("123456");
         user3.setRole(rolesService.getRoles()[0]);
-        User user4 = new User("99999993D", "Marta", "Almonte");
+        User user4 = new User("99999993D", "Marta", "Almonte", "UO182337@uniovi.es");
         user4.setPassword("123456");
         user4.setRole(rolesService.getRoles()[1]);
-        User user5 = new User("99999977E", "Pelayo", "Valdes");
+        User user5 = new User("99999977E", "Pelayo", "Valdes", "UO112337@uniovi.es");
         user5.setPassword("123456");
         user5.setRole(rolesService.getRoles()[1]);
 
         Set user1Offers = new HashSet<Offer>() {
             {
-                add(new Offer("Oferta 4", "Texto4", "Detalles4", 14, user1, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 5", "Texto5", "Detalles5", 14, user1, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 6", "Texto6", "Detalles6", 14, user1, "UO282337@uniovi.es"));
+                add(new Offer("Oferta 4", "Texto4", "Detalles4", 14, user1));
+                add(new Offer("Oferta 5", "Texto5", "Detalles5", 14, user1));
+                add(new Offer("Oferta 6", "Texto6", "Detalles6", 14, user1));
             }
         };
         Set user12ffers = new HashSet<Offer>() {
             {
-                add(new Offer("Oferta 1", "Texto1", "Detalles1", 24, user2, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 2", "Texto2", "Detalles2", 150, user2, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user2, "UO282337@uniovi.es"));
+                add(new Offer("Oferta 1", "Texto1", "Detalles1", 24, user2));
+                add(new Offer("Oferta 2", "Texto2", "Detalles2", 150, user2));
+                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user2));
             }
         };
         user1.setOffers(user1Offers);
