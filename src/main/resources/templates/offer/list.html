@@ -5,15 +5,16 @@
 <head th:replace="fragments/nav"/>
 <div class="container" id="main-container">
     <h2 th:text="#{offer.list.title}"></h2>
+    <p th:text="#{offer.list.search.title}"></p>
     <form class="form-inline" action="/offer/list">
         <div class="form-group">
-            <input name="searchText" type="text" class="form-control" size="50"
-                   th:placeholder="#{offer.list.search.title}">
+            <input id="searchText" name="searchText" type="text" class="form-control" size="50"
+                   th:placeholder="${searchText}" >
         </div>
         <button type="submit" class="btn btn-primary" th:text="#{offer.list.search}"></button>
     </form>
     <div class="form-group">
-        <h3 th:text="#{offer.list.cash}"> </h3> <h4 th:text="${user.money}"></h4>
+        <h3 th:text="#{offer.list.cash}"> </h3> <p th:text="${user.money}"></p>
     </div>
     <p th:text="#{offer.list.msg}"></p>
     <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>

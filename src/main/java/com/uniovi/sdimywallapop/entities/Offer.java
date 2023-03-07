@@ -1,5 +1,7 @@
 package com.uniovi.sdimywallapop.entities;
 
+import com.uniovi.sdimywallapop.repositories.OffersRepository;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,7 +17,6 @@ public class Offer {
     private double price;
     private boolean isSold;
     private Long comprador;
-
     public boolean isSold() {
         return isSold;
     }
@@ -23,7 +24,6 @@ public class Offer {
     public void setSold(boolean sold) {
         isSold = sold;
     }
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -115,4 +115,5 @@ public class Offer {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class OffersController {
@@ -44,6 +45,7 @@ public class OffersController {
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
         model.addAttribute("user", user);
+        model.addAttribute("searchText", searchText);
 
         return "offer/list";
     }
@@ -89,21 +91,11 @@ public class OffersController {
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("user", user);
         model.addAttribute("page", offers);
-        // VALIDADOR DE SERVICIO -> Lista de errores
-        if (offer.getUser().getMoney() < offer.getPrice()) {
-            model.addAttribute("error1", "Error.offer.price.minus");
-            error = true;
-        } if (offer.isSold()) {
-            model.addAttribute("error2", "Error.offer.sold");
-            error = true;
-        } if (offer.getUser().getId() == user.getId()) {
-            model.addAttribute("error3", "Error.offer.user");
-            error = true;
-        }
-        if (error==true) {
+        List<String> errores = offersService.validateOffer(offer, user);
+        model.addAttribute("errores", errores);
+        if (errores.size() > 0) {
             return "offer/list";
         }
-        //
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user.getId());
         return "redirect:/offer/list";
