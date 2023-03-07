@@ -4,7 +4,6 @@ import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.services.OffersService;
 import com.uniovi.sdimywallapop.services.UsersService;
-import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
 import com.uniovi.sdimywallapop.validators.OfferFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,9 +29,6 @@ public class OffersController {
 
     @Autowired
     private OfferFormValidator offerFormValidator;
-
-    @Autowired
-    private OfferBuyValidator offerBuyValidator;
 
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
@@ -84,11 +80,27 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, @PathVariable Long id, Principal principal){
+    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, Principal principal){
+        boolean error = false;
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
         Offer offer = offersService.searchById(id);
+        Page<Offer> offers = offersService.getOffers(pageable);
+        model.addAttribute("offerList", offers.getContent());
         model.addAttribute("user", user);
+        if (offer.getUser().getMoney() < offer.getPrice()) {
+            model.addAttribute("error1", "Error.offer.price.minus");
+            error = true;
+        } if (offer.isSold()) {
+            model.addAttribute("error2", "Error.offer.sold");
+            error = true;
+        } if (offer.getUser().getId() == user.getId()) {
+            model.addAttribute("error3", "Error.offer.user");
+            error = true;
+        }
+        if (error==true) {
+            return "offer/list";
+        }
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user.getDni());
         return "redirect:/offer/list";

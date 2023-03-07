@@ -37,15 +37,20 @@ public class InsertSampleDataService {
 
         Set user1Offers = new HashSet<Offer>() {
             {
-                add(new Offer("Oferta 1", "Texto1", "Detalles1", 24, user1, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 2", "Texto2", "Detalles2", 150, user1, "UO282337@uniovi.es"));
-                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user1, "UO282337@uniovi.es"));
                 add(new Offer("Oferta 4", "Texto4", "Detalles4", 14, user1, "UO282337@uniovi.es"));
                 add(new Offer("Oferta 5", "Texto5", "Detalles5", 14, user1, "UO282337@uniovi.es"));
                 add(new Offer("Oferta 6", "Texto6", "Detalles6", 14, user1, "UO282337@uniovi.es"));
             }
         };
+        Set user12ffers = new HashSet<Offer>() {
+            {
+                add(new Offer("Oferta 1", "Texto1", "Detalles1", 24, user2, "UO282337@uniovi.es"));
+                add(new Offer("Oferta 2", "Texto2", "Detalles2", 150, user2, "UO282337@uniovi.es"));
+                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user2, "UO282337@uniovi.es"));
+            }
+        };
         user1.setOffers(user1Offers);
+        user2.setOffers(user12ffers);
 
         usersService.addUser(user1);
         usersService.addUser(user2);
