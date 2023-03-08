@@ -1,7 +1,5 @@
 package com.uniovi.sdimywallapop.entities;
 
-import com.uniovi.sdimywallapop.repositories.OffersRepository;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -50,10 +48,6 @@ public class Offer {
         this.price = price;
         this.isSold = false;
         this.user = user;
-    }
-
-    public Long getComprador() {
-        return comprador;
     }
 
     public void setComprador(Long comprador) {

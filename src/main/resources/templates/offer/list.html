@@ -58,8 +58,8 @@
             </tr>
             </tbody>
         </table>
-        <div th:each="error : ${errores}">
-            <span class="text-danger" th:errors="*{error}"></span>
+        <div th:each="error : ${errors}">
+            <span class="text-danger" th:text="${error}" ></span>
         </div>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>
