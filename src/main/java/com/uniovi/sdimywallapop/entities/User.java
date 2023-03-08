@@ -1,7 +1,7 @@
 package com.uniovi.sdimywallapop.entities;
 
-
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,12 +24,16 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Offer> offers;
 
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private Set<Conversation> conversations;
+
     public User(String dni, String name, String lastName) {
         super();
         this.dni = dni;
         this.name = name;
         this.lastName = lastName;
         this.money = 100.0;
+        this.conversations = new HashSet<Conversation>();
     }
 
     public String getPassword() {
@@ -84,6 +88,10 @@ public class User {
 
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    public void addConversation(Conversation conversation) {
+        this.conversations.add(conversation);
     }
 
     public void decrementMoney(double price) {

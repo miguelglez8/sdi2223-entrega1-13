@@ -1,5 +1,6 @@
 package com.uniovi.sdimywallapop.services;
 
+import com.uniovi.sdimywallapop.entities.Conversation;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class UsersService {
     }
     public void decrementMoney(User user, double price) {
         user.decrementMoney(price);
+        usersRepository.save(user);
+    }
+
+    public void addConversation(User user, Conversation newConversation) {
+        newConversation.setSeller(user);
+        user.addConversation(newConversation);
         usersRepository.save(user);
     }
 }
