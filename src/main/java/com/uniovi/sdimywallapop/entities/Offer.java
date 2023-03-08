@@ -17,6 +17,7 @@ public class Offer {
     private double price;
     private boolean isSold;
     private Long comprador;
+
     public boolean isSold() {
         return isSold;
     }
@@ -35,16 +36,6 @@ public class Offer {
     public Offer() {
     }
 
-    public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.details = details;
-        this.price = price;
-        this.isSold = false;
-    }
-
     public Offer(String title, String description, String details, double price, User user){
         super();
         this.title = title;
@@ -56,8 +47,14 @@ public class Offer {
         this.user = user;
     }
 
-    public void setComprador(Long comprador) {
-        this.comprador = comprador;
+    public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.details = details;
+        this.price = price;
+        this.isSold = false;
     }
 
     public Long getId() {
@@ -116,15 +113,14 @@ public class Offer {
         this.user = user;
     }
 
-    public void setComprador(String comprador) {
-        this.comprador = comprador;
-    }
-
     public Set<Conversation> getConversations() {
         return conversations;
     }
 
     public void setConversations(Set<Conversation> conversations) {
         this.conversations = conversations;
+    }
+
+    public void setComprador(Long id) {
     }
 }

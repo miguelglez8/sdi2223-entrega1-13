@@ -56,9 +56,9 @@ public class InsertSampleDataService {
         user1.setOffers(user1Offers);
         user2.setOffers(user12ffers);
 
-        Offer offer1 = new Offer("Oferta 8", "Texto8", "Detalles8", 24, user2, "UO284288@uniovi.es");
-        Offer offer2 = new Offer("Oferta 9", "Texto9", "Detalles9", 150, user2, "UO284288@uniovi.es");
-        Offer offer3 = new Offer("Oferta 10", "Texto10", "Detalles10", 14, user2, "UO284288@uniovi.es");
+        Offer offer1 = new Offer("Oferta 8", "Texto8", "Detalles8", 24, user2);
+        Offer offer2 = new Offer("Oferta 9", "Texto9", "Detalles9", 150, user2);
+        Offer offer3 = new Offer("Oferta 10", "Texto10", "Detalles10", 14, user2);
         Set user2Offers = new HashSet<Offer>() {
             {
                 add(offer1);
@@ -76,8 +76,6 @@ public class InsertSampleDataService {
 
         Conversation conversation = new Conversation(user2, user1, offer1);
         conversationService.addConversation(conversation);
-        //Conversation newConversation = conversationService.searchByBuyerSellerAndOffer(user3.getDni(), user1.getDni(), offer1.getId());
-        //System.out.println("ID BUENA: " + newConversation.getId());
 
         Message message1 = new Message("esto es un mensaje de prueba", user1, conversation);
         Message message2 = new Message("si se ve esto significa que todo es correcto", user1, conversation);
