@@ -1,9 +1,15 @@
 package com.uniovi.sdimywallapop;
 
+import com.uniovi.sdimywallapop.pageobjects.*;
+import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 class SdiMywallapopApplicationTests {
@@ -35,4 +41,49 @@ class SdiMywallapopApplicationTests {
         //Cerramos el navegador al finalizar las pruebas
         driver.quit();
     }
+
+    @Test
+    @Order(1)
+    public void PR20() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        //Pinchamos en la opción de menú
+        WebElement menu = driver.findElement(By.id("offerDropdown"));
+        menu.click();
+        WebElement menuItem = menu.findElement(By.xpath("//a[contains(text(),'Menu Item')]"));
+        menuItem.click();
+    }
+
+    @Test
+    @Order(2)
+    public void PR21() {
+
+    }
+
+    @Test
+    @Order(3)
+    public void PR22() {
+
+    }
+
+    @Test
+    @Order(4)
+    public void PR23() {
+
+    }
+
+    @Test
+    @Order(5)
+    public void PR24() {
+
+    }
+
+    @Test
+    @Order(6)
+    public void PR25() {
+
+    }
+
+
+
+
 }
