@@ -2,8 +2,10 @@ package com.uniovi.sdimywallapop.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
+@Table(name = "offer")
 public class Offer {
     @Id
     @GeneratedValue
@@ -22,6 +24,10 @@ public class Offer {
     public void setSold(boolean sold) {
         isSold = sold;
     }
+
+    @OneToMany
+    private Set<Conversation> conversations;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -110,4 +116,15 @@ public class Offer {
         this.user = user;
     }
 
+    public void setComprador(String comprador) {
+        this.comprador = comprador;
+    }
+
+    public Set<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(Set<Conversation> conversations) {
+        this.conversations = conversations;
+    }
 }

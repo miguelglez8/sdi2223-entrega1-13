@@ -1,5 +1,6 @@
 package com.uniovi.sdimywallapop.services;
 
+import com.uniovi.sdimywallapop.entities.Conversation;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,11 @@ public class UsersService {
 
     public User getUserByEmail(String email) {
         return usersRepository.findByEmail(email);
+
+    public void addConversation(User user, Conversation newConversation) {
+        newConversation.setSeller(user);
+        user.addConversation(newConversation);
+        usersRepository.save(user);
     }
 }
 
