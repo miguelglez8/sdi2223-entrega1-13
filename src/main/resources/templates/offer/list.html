@@ -9,12 +9,12 @@
     <form class="form-inline" action="/offer/list">
         <div class="form-group">
             <input id="searchText" name="searchText" type="text" class="form-control" size="50"
-                   th:placeholder="${searchText}" >
+                   th:value="${searchText}" th:placeholder="#{offer.list.search.title}" >
         </div>
         <button type="submit" class="btn btn-primary" th:text="#{offer.list.search}"></button>
     </form>
     <div class="form-group">
-        <h3 th:text="#{offer.list.cash}"> </h3> <p th:text="${user.money}"></p>
+        <h3 th:text="#{offer.list.cash}"> </h3> <h4 th:text="${user.money}"></h4>
     </div>
     <p th:text="#{offer.list.msg}"></p>
     <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
@@ -58,6 +58,9 @@
             </tr>
             </tbody>
         </table>
+        <div th:each="error : ${errores}">
+            <span class="text-danger" th:errors="*{error}"></span>
+        </div>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>
     <footer th:replace="fragments/pagination"></footer>
