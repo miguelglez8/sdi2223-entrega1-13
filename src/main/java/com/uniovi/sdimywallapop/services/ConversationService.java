@@ -7,6 +7,8 @@ import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.ConversationRepository;
 import com.uniovi.sdimywallapop.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,12 +26,17 @@ public class ConversationService {
         conversationRepository.save(conversation);
     }
 
+    public Page<Conversation> getConversations(Pageable pageable) {
+        Page<Conversation> conversations = conversationRepository.findAll(pageable);
+        return conversations;
+    }
+
     public Conversation searchById(Long id) {
         return conversationRepository.findById(id).get();
     }
 
-    public Conversation searchByBuyerSellerAndOffer(String buyerDni, String sellerDni, Long id) {
-        return conversationRepository.findByBuyerSellerAndOffer(buyerDni, sellerDni, id);
+    public Conversation searchByBuyerAndOffer(String buyerDni, Long id) {
+        return conversationRepository.findByBuyerAndOffer(buyerDni, id);
     }
 
     public void addMessage(Message message) {
@@ -41,6 +48,10 @@ public class ConversationService {
     }
 
     public Conversation searchByUserAndOffer(User user, Offer offer){
-        return conversationRepository.searchByUserAndOffer(user.getDni(), offer.getId());
+        return conversationRepository.findByUserAndOffer(user.getDni(), offer.getId());
+    }
+
+    public Page<Conversation> searchConversationsTakingPartBy(Pageable pageable, User user) {
+        return conversationRepository.findConversationsByUser(pageable, user.getDni());
     }
 }

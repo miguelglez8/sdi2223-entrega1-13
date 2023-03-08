@@ -11,7 +11,7 @@
             <p class="card-text" th:text="${message.text}"></p>
         </div>
     </tr>
-    <form class="form-horizontal" method="post" th:action="${'/conversation/start/' + offer.id}" th:object="${message}">
+    <form class="form-horizontal" method="post" th:if="${#lists.isEmpty(conversationList)}" th:action="${'/conversation/resume/' + conversation.id}" th:object="${message}">
         <div>
             <label class="control-label col-sm-2" for="text">Envie un mensaje:</label>
             <input type="text" class="form-control" id="text" name="text"
