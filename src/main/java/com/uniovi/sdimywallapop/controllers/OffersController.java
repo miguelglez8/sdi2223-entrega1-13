@@ -4,11 +4,9 @@ import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.services.OffersService;
 import com.uniovi.sdimywallapop.services.UsersService;
-import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
 import com.uniovi.sdimywallapop.validators.OfferFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 public class OffersController {
@@ -31,15 +29,12 @@ public class OffersController {
     @Autowired
     private OfferFormValidator offerFormValidator;
 
-    @Autowired
-    private OfferBuyValidator offerBuyValidator;
-
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
-                          @RequestParam(value="", required = false) String searchText){
+                          @RequestParam(required = false) String searchText){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+        Page<Offer> offers;
         if (searchText != null && !searchText.isEmpty()) {
             offers = offersService.searchOffersByTitle(pageable, searchText);
         } else {
@@ -48,23 +43,23 @@ public class OffersController {
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
         model.addAttribute("user", user);
+        model.addAttribute("searchText", searchText);
 
         return "offer/list";
     }
 
     @RequestMapping("/offer/list/update")
-    public String updateList(Model model, Pageable pageable, Principal principal) {
+    public String updateList(Model model, Pageable pageable) {
         Page<Offer> offers = offersService.getOffers(pageable);
         model.addAttribute("offerList", offers.getContent());
         return "offer/list :: tableOffers";
     }
 
     @RequestMapping("/offer/listBuy")
-    public String getListBuy(Model model, Principal principal,
-                          @RequestParam(value="", required = false) String searchText){
+    public String getListBuy(Model model, Principal principal){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy";
     }
 
@@ -72,7 +67,7 @@ public class OffersController {
     public String updateListB(Model model, Principal principal) {
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("offerListB", offersService.getOffersByDni(user.getDni()));
+        model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy :: tableOffersB";
     }
 
@@ -84,13 +79,21 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, @PathVariable Long id, Principal principal){
+    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, Principal principal){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
         Offer offer = offersService.searchById(id);
+        Page<Offer> offers = offersService.getOffers(pageable);
+        model.addAttribute("offerList", offers.getContent());
         model.addAttribute("user", user);
+        model.addAttribute("page", offers);
+        List<String> errors = offersService.validateOffer(offer, user);
+        model.addAttribute("errors", errors);
+        if (errors.size() > 0) {
+            return "offer/list";
+        }
         usersService.decrementMoney(user, offer.getPrice());
-        offersService.soldOffer(offer, user.getDni());
+        offersService.soldOffer(offer, user.getId());
         return "redirect:/offer/list";
     }
 

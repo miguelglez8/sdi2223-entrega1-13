@@ -1,28 +1,30 @@
 package com.uniovi.sdimywallapop.validators;
 
 import com.uniovi.sdimywallapop.entities.Offer;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
+import com.uniovi.sdimywallapop.entities.User;
+import org.springframework.beans.factory.annotation.Value;
 
-@Component
-public class OfferBuyValidator implements Validator {
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return Offer.class.equals(clazz);
-    }
+import java.util.ArrayList;
+import java.util.List;
+public class OfferBuyValidator {
+    @Value("${Error.price.minus}")
+    String msg1;
 
-    @Override
-    public void validate(Object target, Errors errors) {
-        Offer offer = (Offer) target;
+    @Value("${Error.offer.sold}")
+    String msg2;
 
+    @Value("${Error.offer.user}")
+    String msg3;
+
+    public List<String> validate(Offer offer, User user) {
+        List<String> errores = new ArrayList<>();
         if (offer.getUser().getMoney() < offer.getPrice()) {
-            errors.rejectValue("price", "Error.offer.price.minus");
+            errores.add(msg1);
+        } if (offer.isSold()) {
+            errores.add(msg2);
+        } if (offer.getUser().getId() == user.getId()) {
+            errores.add(msg3);
         }
-        if (offer.isSold()) {
-            errors.rejectValue("sold", "Error.offer.sold");
-        }
-
-
+        return errores;
     }
 }

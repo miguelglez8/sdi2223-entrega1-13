@@ -3,6 +3,7 @@ package com.uniovi.sdimywallapop.services;
 import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.OffersRepository;
+import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,9 +56,9 @@ public class OffersService {
         return offers;
     }
 
-    public void soldOffer(Offer offer, String dni) {
+    public void soldOffer(Offer offer, Long id) {
         offer.setSold(true);
-        offer.setDniComprador(dni);
+        offer.setComprador(id);
         addOffer(offer);
     }
 
@@ -65,7 +66,11 @@ public class OffersService {
         return offersRepository.findById(id).get();
     }
 
-    public List<Offer> getOffersByDni(String dni) {
-        return offersRepository.findAllByComprador(dni);
+    public List<Offer> getOffersByUserId(Long id) {
+        return offersRepository.findAllByComprador(id);
+    }
+
+    public List<String> validateOffer(Offer offer, User user) {
+        return new OfferBuyValidator().validate(offer, user);
     }
 }
