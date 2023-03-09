@@ -44,15 +44,12 @@ public class OffersService {
     }
 
     public Object getOffersForUser(User user) {
-        List<Offer> offers = new LinkedList<Offer>();
-        offers = offersRepository.findAllByUser(user);
-        return offers;
+        return offersRepository.findAllByUser(user);
     }
 
     public Page<Offer> searchOffersByTitle(Pageable pageable, String searchText) {
-        Page<Offer> offers = new PageImpl<>(new LinkedList<Offer>());
         searchText = "%"+searchText+"%";
-        offers = offersRepository.searchByTitle(pageable, searchText);
+        Page<Offer> offers = offersRepository.searchByTitle(pageable, searchText);
         return offers;
     }
 
