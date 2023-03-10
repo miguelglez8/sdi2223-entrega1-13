@@ -24,7 +24,6 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Offer> offers;
-
     public String getEmail() {
         return email;
     }
@@ -99,4 +98,5 @@ public class User {
     public void decrementMoney(double price) {
         this.money -= price;
     }
+
 }
