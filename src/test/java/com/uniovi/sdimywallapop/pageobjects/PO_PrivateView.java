@@ -39,5 +39,9 @@ public class PO_PrivateView extends PO_NavView {
         elements.get(indice).click();
     }
 
+    static public void refactorLogout(WebDriver driver, String text) {
+        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
+        PO_PrivateView.clickOption(driver, text, "text", loginText);
+    }
 }
 
