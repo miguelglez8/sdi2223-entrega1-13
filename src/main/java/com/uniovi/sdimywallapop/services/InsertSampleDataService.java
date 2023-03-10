@@ -49,8 +49,8 @@ public class InsertSampleDataService {
         Set user12ffers = new HashSet<Offer>() {
             {
                 add(new Offer("Oferta 1", "Texto1", "Detalles1", 24, user2));
-                add(new Offer("Oferta 2", "Texto2", "Detalles2", 150, user2));
-                add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user2));
+                add(new Offer("Oferta 2", "Texto2", "Detalles2", 100, user2));
+                add(new Offer("Oferta 3", "Texto3", "Detalles3", 200, user2));
             }
         };
         user1.setOffers(user1Offers);

@@ -53,9 +53,10 @@ public class OffersService {
         return offers;
     }
 
-    public void soldOffer(Offer offer, Long id) {
+    public void soldOffer(Offer offer, User user) {
         offer.setSold(true);
-        offer.setComprador(id);
+        offer.setComprador(user.getId());
+        offer.setDniComprador(user.getDni());
         addOffer(offer);
     }
 
