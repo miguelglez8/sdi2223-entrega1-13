@@ -42,7 +42,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="offer : ${offerList}">
+            <tr class="filas-list-offers" th:each="offer : ${offerList}">
                 <td th:text="${offer.title}"></td>
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>
@@ -58,10 +58,12 @@
                 <td><a th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
             </tr>
             </tbody>
+            <div th:each="error : ${errors}">
+                <span class="text-danger" th:if="${error.equals('Error.offer.price.minus')}" th:text="#{Error.offer.price.minus}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.sold')}" th:text="#{Error.offer.sold}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.user')}" th:text="#{Error.offer.user}"></span>
+            </div>
         </table>
-        <div th:each="error : ${errors}">
-            <span class="text-danger" th:text="${error}" ></span>
-        </div>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>
     <footer th:replace="fragments/pagination"></footer>
