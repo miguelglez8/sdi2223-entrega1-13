@@ -45,14 +45,6 @@ public class User {
         this.email = email;
         this.conversations = new HashSet<Conversation>();
     }
-    
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getPassword() {
         return password;
