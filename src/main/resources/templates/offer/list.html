@@ -55,6 +55,7 @@
                         <a th:text="#{offer.list.sold}"></a>
                     </div>
                 </td>
+                <td><a th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
             </tr>
             </tbody>
             <div th:each="error : ${errors}">

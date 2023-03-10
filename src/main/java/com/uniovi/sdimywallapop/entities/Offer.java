@@ -2,8 +2,10 @@ package com.uniovi.sdimywallapop.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
+@Table(name = "offer")
 public class Offer {
     @Id
     @GeneratedValue
@@ -24,21 +26,15 @@ public class Offer {
     public void setSold(boolean sold) {
         isSold = sold;
     }
+
+    @OneToMany
+    private Set<Conversation> conversations;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     public Offer() {
-    }
-
-    public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.creationDate = creationDate;
-        this.details = details;
-        this.price = price;
-        this.isSold = false;
     }
 
     public Offer(String title, String description, String details, double price, User user){
@@ -52,12 +48,22 @@ public class Offer {
         this.user = user;
     }
 
-    public void setComprador(Long comprador) {
-        this.comprador = comprador;
+    public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.creationDate = creationDate;
+        this.details = details;
+        this.price = price;
+        this.isSold = false;
     }
 
     public Long getComprador() {
         return comprador;
+    }
+    
+    public void setComprador(Long id) {
+        this.comprador = id;
     }
 
     public Long getId() {
@@ -123,4 +129,11 @@ public class Offer {
         return dniComprador;
     }
 
+    public Set<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(Set<Conversation> conversations) {
+        this.conversations = conversations;
+    }
 }
