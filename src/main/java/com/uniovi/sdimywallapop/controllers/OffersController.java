@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -38,7 +39,26 @@ public class OffersController {
         if (searchText != null && !searchText.isEmpty()) {
             offers = offersService.searchOffersByTitle(pageable, searchText);
         } else {
-            offers = offersService.getOffers(pageable);
+            offers = offersService.getOffersForUser(pageable, user);
+        }
+        model.addAttribute("offerList", offers.getContent());
+        model.addAttribute("page", offers);
+        model.addAttribute("user", user);
+        model.addAttribute("searchText", searchText);
+
+        return "offer/list";
+    }
+
+    @RequestMapping("/offer/ownlist")
+    public String getOwnList(Model model, Pageable pageable, Principal principal,
+                          @RequestParam(required = false) String searchText){
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        Page<Offer> offers;
+        if (searchText != null && !searchText.isEmpty()) {
+            offers = offersService.searchOffersByTitle(pageable, searchText);
+        } else {
+            offers = offersService.getOffersForUser(pageable, user);
         }
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
@@ -73,7 +93,7 @@ public class OffersController {
 
     @RequestMapping(value = "/offer/add")
     public String getOffer(Model model) {
-        model.addAttribute("offerList", offersService.getOffers());
+//        model.addAttribute("usersList", usersService.getUsers());
         model.addAttribute("offer", new Offer());
         return "offer/add";
     }
@@ -98,12 +118,16 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
-    public String setOffer(Model model, @Validated Offer offer, BindingResult result) {
+    public String setOffer(Model model, @Validated Offer offer, BindingResult result, Principal principal) {
         offerFormValidator.validate(offer, result);
         if (result.hasErrors()) {
-            model.addAttribute("offerList", offersService.getOffers());
+//            model.addAttribute("usersList", usersService.getUsers());
             return "offer/add";
         }
+        offer.setCreationDate(new Date());
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        offer.setUser(user);
         offersService.addOffer(offer);
         return "redirect:/offer/list";
     }

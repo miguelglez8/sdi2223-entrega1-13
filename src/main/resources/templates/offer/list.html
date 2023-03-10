@@ -39,6 +39,8 @@
                 <th scope="col" th:text="#{offer.list.data.details}"></th>
                 <th scope="col" th:text="#{offer.list.data.price}"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -47,6 +49,7 @@
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
+                <td><a th:href="${'/offer/delete/' + offer.id}">Eliminar</a>
                 <td>
                     <div th:if="${offer.isSold()==false}">
                         <a th:href="${'/offer/buy/'+offer.id}" th:text="#{offer.list.buy}"></a>
