@@ -43,8 +43,10 @@ public class OffersService {
         offersRepository.deleteById(id);
     }
 
-    public Object getOffersForUser(User user) {
-        return offersRepository.findAllByUser(user);
+    public Page<Offer> getOffersForUser(Pageable pageable, User user) {
+        Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+        offers = offersRepository.findAllByUser(pageable, user);
+        return offers;
     }
 
     public Page<Offer> searchOffersByTitle(Pageable pageable, String searchText) {

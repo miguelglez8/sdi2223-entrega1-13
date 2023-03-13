@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -46,6 +47,17 @@ public class OffersController {
         model.addAttribute("searchText", searchText);
 
         return "offer/list";
+    }
+
+    @RequestMapping("/offer/myList")
+    public String getMyList(Model model, Pageable pageable, Principal principal){
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        Page<Offer> offers;
+        offers = offersService.getOffersForUser(pageable, user);
+        model.addAttribute("offerList", offers.getContent());
+        model.addAttribute("page", offers);
+        return "offer/myList";
     }
 
     @RequestMapping("/offer/list/update")
@@ -98,12 +110,16 @@ public class OffersController {
     }
 
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
-    public String setOffer(Model model, @Validated Offer offer, BindingResult result) {
+    public String setOffer(Principal principal, Model model, @Validated Offer offer, BindingResult result) {
         offerFormValidator.validate(offer, result);
         if (result.hasErrors()) {
             model.addAttribute("offerList", offersService.getOffers());
             return "offer/add";
         }
+        offer.setCreationDate(new Date());
+        String dni = principal.getName(); // DNI es el name de la autenticación
+        User user = usersService.getUserByDni(dni);
+        offer.setUser(user);
         offersService.addOffer(offer);
         return "redirect:/offer/list";
     }
