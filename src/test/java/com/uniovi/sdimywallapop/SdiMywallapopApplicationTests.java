@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SdiMywallapopApplicationTests {
 
     //Miguel
-//    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-//    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
-    static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+    // static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+    // static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -367,9 +367,9 @@ class SdiMywallapopApplicationTests {
     @Order(20)
     public void PR20() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         // introducimos un campo vacío y buscamos
-        driver.get("http://localhost:8090/offer/list?size=100&searchText=");
+        driver.get("http://localhost:8090/offer/list?size=200&searchText=");
         // seleccionamos todas las que aparecen
         List<WebElement> rows = driver.findElements(By.className("filas-list-offers"));
         // comprobamos que el número de ofertas que aparecen son las que hay en el servicio
@@ -386,8 +386,8 @@ class SdiMywallapopApplicationTests {
     @Order(21)
     public void PR21() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
-        driver.get("http://localhost:8090/offer/list?size=100");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        driver.get("http://localhost:8090/offer/list?size=200");
         // introducimos un campo que no existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
@@ -412,9 +412,9 @@ class SdiMywallapopApplicationTests {
     @Order(22)
     public void PR22() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         // mostramos todas las ofertas
-        driver.get("http://localhost:8090/offer/list?size=100");
+        driver.get("http://localhost:8090/offer/list?size=200");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
@@ -429,7 +429,7 @@ class SdiMywallapopApplicationTests {
         // comprobamos que se descuenta correctamente el marcador
         Assertions.assertEquals(100 - offersService.getOffers().stream()
                 .filter(offer -> offer.isSold()).toList().get(0).getPrice(), value);
-        // logout
+        // logoutF
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
@@ -441,14 +441,14 @@ class SdiMywallapopApplicationTests {
     @Order(23)
     public void PR23() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "user02@uniovi.es", "user01");
+        PO_PrivateView.refactorLogging(driver, "user08@email.com", "user01");
         // mostramos todas las ofertas
-        driver.get("http://localhost:8090/offer/list?size=100");
+        driver.get("http://localhost:8090/offer/list?size=200");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 22");
+        input.sendKeys("Oferta 2");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
@@ -470,9 +470,9 @@ class SdiMywallapopApplicationTests {
     @Order(24)
     public void PR24() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "user03@uniovi.es", "user01");
+        PO_PrivateView.refactorLogging(driver, "user03@email.com", "user01");
         // mostramos todas las ofertas
-        driver.get("http://localhost:8090/offer/list?size=100");
+        driver.get("http://localhost:8090/offer/list?size=200");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
@@ -502,9 +502,9 @@ class SdiMywallapopApplicationTests {
     @Order(25)
     public void PR25() {
         // login
-        PO_PrivateView.refactorLogging(driver, "user04@uniovi.es", "user01");
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
         // mostramos las ofertas
-        driver.get("http://localhost:8090/offer/list?size=100");
+        driver.get("http://localhost:8090/offer/list?size=200");
         // buscamos por título
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
@@ -520,7 +520,7 @@ class SdiMywallapopApplicationTests {
         List<WebElement> rows = driver.findElements(By.className("filas-listBuy-offers"));
         // vemos que solo puede haber una
         Assertions.assertEquals(offersService.getOffers().stream()
-                .filter(offer -> offer.isSold() && offer.getEmailComprador().equals("user04@uniovi.es")).toList().size(), rows.size());
+                .filter(offer -> offer.isSold() && offer.getEmailComprador().equals("user04@email.com")).toList().size(), rows.size());
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
     }

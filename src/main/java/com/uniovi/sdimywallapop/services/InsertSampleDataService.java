@@ -72,27 +72,10 @@ public class InsertSampleDataService {
         user16.setPassword("admin");
         user16.setRole(rolesService.getRoles()[1]);
 
-        usersService.addUser(user1);
-        usersService.addUser(user2);
-        usersService.addUser(user3);
-        usersService.addUser(user4);
-        usersService.addUser(user5);
-        usersService.addUser(user6);
-        usersService.addUser(user7);
-        usersService.addUser(user8);
-        usersService.addUser(user9);
-        usersService.addUser(user10);
-        usersService.addUser(user11);
-        usersService.addUser(user12);
-        usersService.addUser(user13);
-        usersService.addUser(user14);
-        usersService.addUser(user15);
-        usersService.addUser(user16);
-
         Set user1Offers = new HashSet<Offer>() {
             {
                 add(new Offer("Oferta 1", "Texto1", "Detalles1", 14, user1));
-                add(new Offer("Oferta 2", "Texto2", "Detalles2", 14, user1));
+                add(new Offer("Oferta 2", "Texto2", "Detalles2", 100, user1));
                 add(new Offer("Oferta 3", "Texto3", "Detalles3", 14, user1));
                 add(new Offer("Oferta 4", "Texto4", "Detalles4", 14, user1));
                 add(new Offer("Oferta 5", "Texto5", "Detalles5", 14, user1));
@@ -344,6 +327,23 @@ public class InsertSampleDataService {
         user14.setOffers(user23ffers);
         user15.setOffers(user24ffers);
         user16.setOffers(user25ffers);
+
+        usersService.addUser(user1);
+        usersService.addUser(user2);
+        usersService.addUser(user3);
+        usersService.addUser(user4);
+        usersService.addUser(user5);
+        usersService.addUser(user6);
+        usersService.addUser(user7);
+        usersService.addUser(user8);
+        usersService.addUser(user9);
+        usersService.addUser(user10);
+        usersService.addUser(user11);
+        usersService.addUser(user12);
+        usersService.addUser(user13);
+        usersService.addUser(user14);
+        usersService.addUser(user15);
+        usersService.addUser(user16);
 
         //Conversation conversation = new Conversation(user2, user1, new Offer("Oferta 8", "Texto8", "Detalles8", 24, user2));
         //conversationService.addConversation(conversation);
