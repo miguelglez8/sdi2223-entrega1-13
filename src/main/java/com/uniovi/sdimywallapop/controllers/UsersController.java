@@ -74,7 +74,7 @@ public class UsersController {
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         User originalUser = usersService.getUser(user.getId());
-        originalUser.setDni(user.getDni());
+        originalUser.setEmail(user.getEmail());
         originalUser.setName(user.getName());
         originalUser.setLastName(user.getLastName());
         //originalUser.setPassword(user.getPassword());

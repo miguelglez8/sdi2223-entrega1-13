@@ -294,11 +294,14 @@ class SdiMywallapopApplicationTests {
         PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
     }
 
+    /**
+     * PR20. Ir a la lista de ofertas, y buscar con el buscador vacío
+     * comprobar que aparecen todas las ofertas
+     */
     @Test
-    @Order(1)
     public void PR20() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         // introducimos un campo vacío y buscamos
         driver.get("http://localhost:8090/offer/list?size=100&searchText=");
         // seleccionamos todas las que aparecen
@@ -309,11 +312,14 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR21. Ir a la lista de ofertas, y buscar con el buscador el correo que queramos
+     * comprobar que aparece la oferta con ese correo
+     */
     @Test
-    @Order(2)
     public void PR21() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que no existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
@@ -331,18 +337,21 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR22. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea menor a nuestro saldo (100)
+     * comprobar que no hay ningún error, que se actualiza la vista y se descuenta el saldo bien
+     */
     @Test
-    @Order(3)
     public void PR22() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 1");
+        input.sendKeys("Oferta 11");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
@@ -356,18 +365,21 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea igual a nuestro saldo (100)
+     * comprobar que no hay ningún error, que se actualiza la vista y se descuenta el saldo bien
+     */
     @Test
-    @Order(4)
     public void PR23() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999992C", "123456");
+        PO_PrivateView.refactorLogging(driver, "user02@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 2");
+        input.sendKeys("Oferta 22");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
@@ -381,18 +393,21 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea mayor a nuestro saldo (100)
+     * comprobar que no hay un error, que se actualiza la vista y no se descuenta el saldo
+     */
     @Test
-    @Order(5)
     public void PR24() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999993D", "123456");
+        PO_PrivateView.refactorLogging(driver, "user03@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 3");
+        input.sendKeys("Oferta 43");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la intentamos comprar
@@ -409,11 +424,14 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas compradas
+     * comprobar que están las ofertas que hemos comprado
+     */
     @Test
-    @Order(6)
     public void PR25() {
         // login
-        PO_PrivateView.refactorLogging(driver, "99999977E", "123456");
+        PO_PrivateView.refactorLogging(driver, "user04@uniovi.es", "user01");
         // mostramos las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // buscamos por título
@@ -431,7 +449,7 @@ class SdiMywallapopApplicationTests {
         List<WebElement> rows = driver.findElements(By.className("filas-listBuy-offers"));
         // vemos que solo puede haber una
         Assertions.assertEquals(offersService.getOffers().stream()
-                .filter(offer -> offer.isSold() && offer.getDniComprador().equals("99999977E")).toList().size(), rows.size());
+                .filter(offer -> offer.isSold() && offer.getEmailComprador().equals("user04@uniovi.es")).toList().size(), rows.size());
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
     }

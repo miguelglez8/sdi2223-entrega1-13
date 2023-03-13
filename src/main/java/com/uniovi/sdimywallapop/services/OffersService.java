@@ -58,7 +58,7 @@ public class OffersService {
     public void soldOffer(Offer offer, User user) {
         offer.setSold(true);
         offer.setComprador(user.getId());
-        offer.setDniComprador(user.getDni());
+        offer.setEmailComprador(user.getEmail());
         addOffer(offer);
     }
 

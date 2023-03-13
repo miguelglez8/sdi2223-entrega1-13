@@ -48,10 +48,10 @@ public class ConversationService {
     }
 
     public Conversation searchByUserAndOffer(User user, Offer offer){
-        return conversationRepository.findByUserAndOffer(user.getDni(), offer.getId());
+        return conversationRepository.findByUserAndOffer(user.getEmail(), offer.getId());
     }
 
     public Page<Conversation> searchConversationsTakingPartBy(Pageable pageable, User user) {
-        return conversationRepository.findConversationsByUser(pageable, user.getDni());
+        return conversationRepository.findConversationsByUser(pageable, user.getEmail());
     }
 }

@@ -29,7 +29,7 @@
             <label class="control-label col-sm-2" for="email" th:text="#{signup.email}">Email:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="email" name="email"
-                       placeholder="Ejemplo: UOXXXXXX@uniovi.es" required/>
+                       placeholder="Ejemplo: userXX@uniovi.es" required/>
                 <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
             </div>
         </div>
