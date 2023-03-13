@@ -37,9 +37,6 @@ public class UsersService {
     public void editUser(User user) {
         usersRepository.save(user);
     }
-    public User getUserByDni(String dni) {
-        return usersRepository.findByDni(dni);
-    }
 
     public void deleteUser(Long id) {
         usersRepository.deleteById(id);
@@ -47,6 +44,10 @@ public class UsersService {
     public void decrementMoney(User user, double price) {
         user.decrementMoney(price);
         usersRepository.save(user);
+    }
+
+    public void deleteUsers(List<Long> userIds) {
+        usersRepository.deleteAllById(userIds);
     }
 
     public User getUserByEmail(String email) {

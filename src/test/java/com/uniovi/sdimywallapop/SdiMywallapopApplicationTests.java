@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 class SdiMywallapopApplicationTests {
 
@@ -25,6 +27,9 @@ class SdiMywallapopApplicationTests {
     //Ton
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
     static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+
+   // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+   // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
     static String URL = "http://localhost:8090";
@@ -54,6 +59,253 @@ class SdiMywallapopApplicationTests {
     static public void end() {
         //Cerramos el navegador al finalizar las pruebas
         driver.quit();
+    }
+
+    /**
+     * PR01. Registro de Usuario con datos válidos
+     */
+
+    @Test
+    public void PR01() {
+        // Vamos al formulario de registro
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test_", "test_", "test@email.com",
+                "123456", "123456");
+
+
+    }
+
+    /**
+     * PR02. Registro de Usuario con datos inválidos (email vacío, nombre vacío,
+     * apellidos vacíos)
+     */
+
+    @Test
+    public void PR02() {
+        // Vamos al formulario de registro
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "awffw", "test_", "a",
+                "123456", "123456");
+
+        // Comprobamos el error de email vacío.
+        PO_SignUpView.checkElementByKey(driver,"Error.signup.name.length", PO_Properties.getSPANISH());
+
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, " ", "fawf", "test_",
+                "123456", "123456");
+        // Comprobamos el error de nombre vacío.
+        PO_SignUpView.checkElementByKey(driver, "Error.signup.name.length",
+                PO_Properties.getSPANISH());
+
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test@email.com", " ", "test@email.com",
+                "123456", "123456");
+        // Comprobamos el error de apellidos vacío.
+        PO_SignUpView.checkElementByKey(driver, "Error.signup.lastName.length",
+                PO_Properties.getSPANISH());
+
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test_", "test_", "test@email.com",
+                " ", " ");
+        // Comprobamos el error de contraseña vacía.
+        PO_SignUpView.checkElementByKey(driver, "Error.signup.password.length",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR03. Registro de Usuario con datos inválidos (repetición de contraseña
+     * inválida).
+     */
+
+    @Test
+    public void PR03() {
+        // Vamos al formulario de registro
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test", "test", "test@email.com",
+                "123456", "123457");
+        // Comprobamos que el error existe
+        PO_SignUpView.checkElementByKey(driver, "Error.signup.passwordConfirm.coincidence",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR04. Registro de Usuario con datos inválidos (email existente).
+     */
+
+    @Test
+    public void PR04() {
+        // Vamos al formulario de registro
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test", "test", "admin@email.com",
+                "123456", "123456");
+        // Comprobamos el error de email repetido.
+        PO_SignUpView.checkElementByKey(driver, "Error.signup.email.duplicate",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR05. Inicio de sesión con datos válidos (administrador).
+     */
+
+    @Test
+    public void PR05() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        // Comprobamos que es el admin
+        PO_NavView.checkIsAdmin(driver);
+    }
+
+    /**
+     * PR06. Inicio de sesión con datos válidos (usuario estándar).
+     */
+
+    @Test
+    public void PR06() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "miguel@email.com", "password");
+        // Comprobamos que es el admin
+        PO_NavView.checkIsUser(driver);
+    }
+
+    /**
+     * PR07. Inicio de sesión con datos inválidos (usuario estándar, campo email
+     * y contraseña vacíos).
+     */
+
+    @Test
+    public void PR07() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "   ", "   ");
+        // Comprobamos que el error existe
+        PO_LoginView.checkElementByKey(driver, "login.error",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR08. Inicio de sesión con datos válidos (usuario estándar, email
+     * existente, pero contraseña incorrecta).
+     */
+
+    @Test
+    public void PR08() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "miguel@email.com", "123456789");
+        // Comprobamos que el error existe
+        PO_LoginView.checkElementByKey(driver, "login.error",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR09. Inicio de sesión con datos inválidos (usuario estándar, email no
+     * existente en la aplicación).
+     */
+
+    @Test
+    public void PR09() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "noexisto@email.com", "123456");
+        // Comprobamos que el error existe
+        PO_LoginView.checkElementByKey(driver, "login.error",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR10. Hacer click en la opción de salir de sesión y comprobar que se
+     * redirige a la página de inicio de sesión (Login).
+     */
+
+    @Test
+    public void PR10() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "admim@email.com", "admin");
+        // Salimos de sesión
+        List<WebElement> elementos = PO_View.checkElementBy(driver, "free",
+                "//li[contains(@id, 'desconexion')]/a");
+        elementos.get(0).click();
+        // Comprobamos que entramos en la página de login
+        PO_LoginView.checkElementBy(driver, "id", "login");
+    }
+
+    /**
+     * PR11. Comprobar que el botón cerrar sesión no está visible si el usuario
+     * no está autenticado.
+     */
+
+    @Test
+    public void PR11() {
+        PO_View.checkElementByKey(driver, "logout.message",
+                PO_Properties.getSPANISH());
+    }
+
+    /**
+     * PR12. Mostrar el listado de usuarios y comprobar que se muestran todos
+     * los que existen en el sistema.
+     */
+
+    @Test
+    public void PR12() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        // Vamos a la lista de usuarios
+        PO_UserList.goToPage(driver);
+        // Conseguimos los usuarios
+        List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
+                "checkBox");
+        assertTrue(elementos.size() == 5);
+        PO_UserList.checkElementBy(driver, "text", "miguel@email.com");
+        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
+        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
+        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
+        PO_UserList.checkElementBy(driver, "text", "alvaro@email.com");
+    }
+
+    /**
+     * PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
+     * comprobar que la lista se actualiza y dicho usuario desaparece.
+     */
+
+    @Test
+    public void PR13() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        // Vamos a la lista de usuarios
+        PO_UserList.goToPage(driver);
+        // Conseguimos los usuarios
+        PO_UserList.deleteUser(driver, 0);
+        List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
+                "checkBox");
+        assertTrue(elementos.size() == 4);
+        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
+        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
+        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
+        PO_UserList.checkElementBy(driver, "text", "alvaro@email.com");
+    }
+
+    /**
+     * PR14. Ir a la lista de usuarios, borrar el último usuario de la lista,
+     * comprobar que la lista se actualiza y dicho usuario desaparece.
+     */
+
+    @Test
+    public void PR14() {
+        // Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        // Vamos a la lista de usuarios
+        PO_UserList.goToPage(driver);
+        // Conseguimos los usuarios
+        PO_UserList.deleteUser(driver, 4);
+        List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
+                "checkBox");
+        assertTrue(elementos.size() == 4);
+        PO_UserList.checkElementBy(driver, "text", "miguel@email.com");
+        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
+        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
+        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
     }
 
     @Test
@@ -107,11 +359,15 @@ class SdiMywallapopApplicationTests {
         Assertions.assertEquals(2, elements.size());
     }
 
+    /**
+     * PR20. Ir a la lista de ofertas, y buscar con el buscador vacío
+     * comprobar que aparecen todas las ofertas
+     */
     @Test
     @Order(20)
     public void PR20() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         // introducimos un campo vacío y buscamos
         driver.get("http://localhost:8090/offer/list?size=100&searchText=");
         // seleccionamos todas las que aparecen
@@ -122,11 +378,15 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR21. Ir a la lista de ofertas, y buscar con el buscador el correo que queramos
+     * comprobar que aparece la oferta con ese correo
+     */
     @Test
     @Order(21)
     public void PR21() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que no existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
@@ -144,18 +404,22 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR22. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea menor a nuestro saldo (100)
+     * comprobar que no hay ningún error, que se actualiza la vista y se descuenta el saldo bien
+     */
     @Test
     @Order(22)
     public void PR22() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 1");
+        input.sendKeys("Oferta 11");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
@@ -169,18 +433,22 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea igual a nuestro saldo (100)
+     * comprobar que no hay ningún error, que se actualiza la vista y se descuenta el saldo bien
+     */
     @Test
     @Order(23)
     public void PR23() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999992C", "123456");
+        PO_PrivateView.refactorLogging(driver, "user02@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 2");
+        input.sendKeys("Oferta 22");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
@@ -194,18 +462,22 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea mayor a nuestro saldo (100)
+     * comprobar que no hay un error, que se actualiza la vista y no se descuenta el saldo
+     */
     @Test
     @Order(24)
     public void PR24() {
         // nos logueamos
-        PO_PrivateView.refactorLogging(driver, "99999993D", "123456");
+        PO_PrivateView.refactorLogging(driver, "user03@uniovi.es", "user01");
         // mostramos todas las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // introducimos un campo que existe en el campo de búsqueda
         WebElement input = driver.findElement(By.name("searchText"));
         input.click();
         input.clear();
-        input.sendKeys("Oferta 3");
+        input.sendKeys("Oferta 43");
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la intentamos comprar
@@ -222,11 +494,15 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR23. Ir a la lista de ofertas compradas
+     * comprobar que están las ofertas que hemos comprado
+     */
     @Test
     @Order(25)
     public void PR25() {
         // login
-        PO_PrivateView.refactorLogging(driver, "99999977E", "123456");
+        PO_PrivateView.refactorLogging(driver, "user04@uniovi.es", "user01");
         // mostramos las ofertas
         driver.get("http://localhost:8090/offer/list?size=100");
         // buscamos por título
@@ -244,7 +520,7 @@ class SdiMywallapopApplicationTests {
         List<WebElement> rows = driver.findElements(By.className("filas-listBuy-offers"));
         // vemos que solo puede haber una
         Assertions.assertEquals(offersService.getOffers().stream()
-                .filter(offer -> offer.isSold() && offer.getDniComprador().equals("99999977E")).toList().size(), rows.size());
+                .filter(offer -> offer.isSold() && offer.getEmailComprador().equals("user04@uniovi.es")).toList().size(), rows.size());
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
     }

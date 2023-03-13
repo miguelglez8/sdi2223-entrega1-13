@@ -17,7 +17,7 @@ public class Offer {
     private double price;
     private boolean isSold;
     private Long comprador;
-    private String dniComprador;
+    private String emailComprador;
 
     public boolean isSold() {
         return isSold;
@@ -122,11 +122,11 @@ public class Offer {
         this.user = user;
     }
 
-    public void setDniComprador(String dni) {
-        this.dniComprador = dni;
+    public void setEmailComprador(String email) {
+        this.emailComprador = email;
     }
-    public String getDniComprador() {
-        return dniComprador;
+    public String getEmailComprador() {
+        return emailComprador;
     }
 
     public Set<Conversation> getConversations() {

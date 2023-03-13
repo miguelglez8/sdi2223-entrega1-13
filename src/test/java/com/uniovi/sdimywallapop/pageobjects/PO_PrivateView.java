@@ -33,17 +33,12 @@ public class PO_PrivateView extends PO_NavView {
         By boton = By.className("btn");
         driver.findElement(boton).click();
     }
-
-    static public void refactorLogging(WebDriver driver, String dni, String password) {
+    
+    static public void refactorLogging(WebDriver driver, String email, String password) {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, dni, password);
-    }
-
-    static public void refactorCheck(WebDriver driver, int indice, String text) {
-        List<WebElement> elements = PO_View.checkElementBy(driver, "free", text);
-        elements.get(indice).click();
+        PO_LoginView.fillLoginForm(driver, email, password);
     }
 
     static public void refactorLogout(WebDriver driver, String text) {

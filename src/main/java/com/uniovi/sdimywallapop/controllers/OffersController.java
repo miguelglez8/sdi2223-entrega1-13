@@ -33,8 +33,8 @@ public class OffersController {
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
                           @RequestParam(required = false) String searchText){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Page<Offer> offers;
         if (searchText != null && !searchText.isEmpty()) {
             offers = offersService.searchOffersByTitle(pageable, searchText);
@@ -51,8 +51,8 @@ public class OffersController {
 
     @RequestMapping("/offer/myList")
     public String getMyList(Model model, Pageable pageable, Principal principal){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Page<Offer> offers;
         offers = offersService.getOffersForUser(pageable, user);
         model.addAttribute("offerList", offers.getContent());
@@ -69,16 +69,16 @@ public class OffersController {
 
     @RequestMapping("/offer/listBuy")
     public String getListBuy(Model model, Principal principal){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy";
     }
 
     @RequestMapping("/offer/list/updateBuy")
     public String updateListB(Model model, Principal principal) {
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
         return "offer/listBuy :: tableOffersB";
     }
@@ -92,8 +92,8 @@ public class OffersController {
 
     @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
     public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, Principal principal){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
         Page<Offer> offers = offersService.getOffers(pageable);
         model.addAttribute("offerList", offers.getContent());
@@ -117,8 +117,8 @@ public class OffersController {
             return "offer/add";
         }
         offer.setCreationDate(new Date());
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
         return "redirect:/offer/myList";
