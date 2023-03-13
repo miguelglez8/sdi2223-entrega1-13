@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class SeleniumUtils {
 
 	/**
@@ -20,7 +22,7 @@ public class SeleniumUtils {
 	static public void textIsPresentOnPage(WebDriver driver, String text)
 	{
 		List<WebElement> list = driver.findElements(By.xpath("//*[contains(text(),'" + text + "')]"));
-		Assertions.assertTrue(list.size() > 0, "Texto " + text + " no localizado!");
+		assertTrue(list.size() > 0, "Texto " + text + " no localizado!");
 	}
 
 	/**
@@ -45,7 +47,7 @@ public class SeleniumUtils {
 		Boolean resultado = 
 				(new WebDriverWait(driver, timeout)).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[contains(text(),'" + text + "')]")));
 
-		Assertions.assertTrue(resultado);
+		assertTrue(resultado);
 	}
 
 
@@ -116,5 +118,32 @@ public class SeleniumUtils {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	static public List<WebElement> EsperaCargaPaginaxpath(WebDriver driver,
+														  String xpath, int timeout) {
+		WebElement resultado = (new WebDriverWait(driver, timeout)).until(
+				ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+		assertTrue(resultado != null);
+		List<WebElement> elementos = driver.findElements(By.xpath(xpath));
+
+		return elementos;
+	}
+
+	static public List<WebElement> EsperaCargaPagina(WebDriver driver,
+													 String criterio, String text, int timeout) {
+		String busqueda;
+		if (criterio.equals("id"))
+			busqueda = "//*[contains(@id,'" + text + "')]";
+		else if (criterio.equals("class"))
+			busqueda = "//*[contains(@class,'" + text + "')]";
+		else if (criterio.equals("text"))
+			busqueda = "//*[contains(text(),'" + text + "')]";
+		else if (criterio.equals("free"))
+			busqueda = text;
+		else
+			busqueda = "//*[contains(" + criterio + ",'" + text + "')]";
+
+		return EsperaCargaPaginaxpath(driver, busqueda, timeout);
 	}
 }
