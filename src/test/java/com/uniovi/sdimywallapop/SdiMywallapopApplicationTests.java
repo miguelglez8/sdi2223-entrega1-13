@@ -187,7 +187,4 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.refactorLogout(driver, "logout");
     }
 
-
-
-
 }
