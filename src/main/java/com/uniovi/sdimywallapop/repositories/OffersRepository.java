@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface OffersRepository extends CrudRepository<Offer, Long> {
-    List<Offer> findAllByUser(User user);
+    Page<Offer> findAllByUser(Pageable pageable, User user);
 
     Page<Offer> findAll(Pageable pageable);
 
