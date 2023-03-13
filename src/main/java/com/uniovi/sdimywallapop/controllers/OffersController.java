@@ -121,12 +121,12 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
-        return "redirect:/offer/list";
+        return "redirect:/offer/myList";
     }
 
     @RequestMapping("/offer/delete/{id}")
     public String deleteOffer(@PathVariable Long id){
         offersService.deleteOffer(id);
-        return "redirect:/offer/list";
+        return "redirect:/offer/myList";
     }
 }
