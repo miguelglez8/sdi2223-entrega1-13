@@ -18,7 +18,7 @@ public class User {
     private double money;
     private String password;
     private String email;
-
+    private Boolean active;
     @Transient //propiedad que no se almacena en la tabla.
     private String passwordConfirm;
 
@@ -38,6 +38,7 @@ public class User {
 
     public User(String dni, String name, String lastName, String email) {
         super();
+        this.active = true;
         this.dni = dni;
         this.name = name;
         this.lastName = lastName;
@@ -58,7 +59,13 @@ public class User {
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
     public User() { }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

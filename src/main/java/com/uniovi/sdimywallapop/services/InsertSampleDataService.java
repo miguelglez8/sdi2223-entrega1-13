@@ -32,11 +32,8 @@ public class InsertSampleDataService {
         User user3 = new User("99999992C", "María", "Rodríguez", "UO282117@uniovi.es");
         user3.setPassword("123456");
         user3.setRole(rolesService.getRoles()[0]);
-        User user4 = new User("99999993D", "Marta", "Almonte", "UO182337@uniovi.es");
-        user4.setPassword("123456");
-        user4.setRole(rolesService.getRoles()[1]);
-        User user5 = new User("99999977E", "Pelayo", "Valdes", "UO112337@uniovi.es");
-        user5.setPassword("123456");
+        User user5 = new User("99999977E", "Pelayo", "Valdes", "admin@email.com");
+        user5.setPassword("admin");
         user5.setRole(rolesService.getRoles()[1]);
 
         Set user1Offers = new HashSet<Offer>() {
@@ -71,7 +68,6 @@ public class InsertSampleDataService {
         usersService.addUser(user1);
         usersService.addUser(user2);
         usersService.addUser(user3);
-        usersService.addUser(user4);
         usersService.addUser(user5);
 
         Conversation conversation = new Conversation(user2, user1, offer1);

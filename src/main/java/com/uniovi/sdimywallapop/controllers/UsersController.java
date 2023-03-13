@@ -16,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class UsersController {
     @Autowired
@@ -49,9 +51,18 @@ public class UsersController {
         model.addAttribute("user", usersService.getUser(id));
         return "user/details";
     }
-    @RequestMapping("/user/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        usersService.deleteUser(id);
+
+    @PostMapping("/user/delete")
+    public String delete(
+            @RequestParam(value = "ck", required = false) List<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            // No se han seleccionado usuarios para eliminar
+            return "redirect:/user/list";
+        }
+
+        // Elimina los usuarios seleccionados
+        usersService.deleteUsers(userIds);
+
         return "redirect:/user/list";
     }
     @RequestMapping(value = "/user/edit/{id}")
@@ -84,27 +95,30 @@ public class UsersController {
         }
         user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
-        securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
+        securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
         return "redirect:home";
     }
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login() {
         return "login";
     }
-    @RequestMapping(value = {"/home"}, method = RequestMethod.GET)
-    public String home(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String dni = auth.getName();
-        User activeUser = usersService.getUserByDni(dni);
 
-        return "home";
+    @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+    public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        String email = auth.getName();
+        User activeUser = usersService.getUserByEmail(email);
+            if (activeUser.getRole().equals("ROLE_ADMIN")) {
+                return "redirect:user/list";
+            }else{
+                return "redirect:offer/myList";
+            }
     }
+
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signup(Model model) {
         model.addAttribute("user", new User());
         return "signup";
     }
-
-
-
 }

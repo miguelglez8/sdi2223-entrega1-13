@@ -49,6 +49,10 @@ public class UsersService {
         usersRepository.save(user);
     }
 
+    public void deleteUsers(List<Long> userIds) {
+        usersRepository.deleteAllById(userIds);
+    }
+
     public User getUserByEmail(String email) {
         return usersRepository.findByEmail(email);
     }
