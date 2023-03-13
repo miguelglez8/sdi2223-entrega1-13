@@ -1,7 +1,10 @@
 package com.uniovi.sdimywallapop;
 
+import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.pageobjects.*;
 import com.uniovi.sdimywallapop.services.OffersService;
+import com.uniovi.sdimywallapop.services.UsersService;
+import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,12 +17,20 @@ import java.util.List;
 
 @SpringBootTest
 class SdiMywallapopApplicationTests {
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+
+    //Miguel
+//    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+//    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+
+    //Ton
+    static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+    static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
     static String URL = "http://localhost:8090";
     @Autowired
     private OffersService offersService;
+
     public static WebDriver getDriver(String PathFirefox, String Geckodriver) {
         System.setProperty("webdriver.firefox.bin", PathFirefox);
         System.setProperty("webdriver.gecko.driver", Geckodriver);
@@ -46,7 +57,58 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(1)
+    @Order(15)
+    public void PR15() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        driver.get("http://localhost:8090/offer/add");
+        PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","24");
+        String checkText = "Mesa";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+    }
+
+    @Test
+    @Order(16)
+    public void PR16() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        driver.get("http://localhost:8090/offer/add");
+        PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","-24");
+        String checkText = "El precio no puede ser negativo.";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+    }
+
+    @Test
+    @Order(17)
+    public void PR17() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        driver.get("http://localhost:8090/offer/myList");
+        List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
+        Assertions.assertEquals(4, elements.size());
+    }
+
+    @Test
+    @Order(18)
+    public void PR18() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        driver.get("http://localhost:8090/offer/myList");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Mesa')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
+        Assertions.assertEquals(3, elements.size());
+    }
+
+    @Test
+    @Order(19)
+    public void PR19() {
+        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        driver.get("http://localhost:8090/offer/myList");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Oferta 4')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
+        Assertions.assertEquals(2, elements.size());
+    }
+
+    @Test
+    @Order(20)
     public void PR20() {
         // nos logueamos
         PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
@@ -61,7 +123,7 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(2)
+    @Order(21)
     public void PR21() {
         // nos logueamos
         PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
@@ -83,7 +145,7 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(3)
+    @Order(22)
     public void PR22() {
         // nos logueamos
         PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
@@ -108,7 +170,7 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(4)
+    @Order(23)
     public void PR23() {
         // nos logueamos
         PO_PrivateView.refactorLogging(driver, "99999992C", "123456");
@@ -133,7 +195,7 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(5)
+    @Order(24)
     public void PR24() {
         // nos logueamos
         PO_PrivateView.refactorLogging(driver, "99999993D", "123456");
@@ -161,7 +223,7 @@ class SdiMywallapopApplicationTests {
     }
 
     @Test
-    @Order(6)
+    @Order(25)
     public void PR25() {
         // login
         PO_PrivateView.refactorLogging(driver, "99999977E", "123456");
@@ -186,8 +248,5 @@ class SdiMywallapopApplicationTests {
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
     }
-
-
-
 
 }
