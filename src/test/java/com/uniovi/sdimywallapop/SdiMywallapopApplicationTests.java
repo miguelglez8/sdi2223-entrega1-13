@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class SdiMywallapopApplicationTests {
     static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+   // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+   // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
     static String URL = "http://localhost:8090";
     @Autowired
