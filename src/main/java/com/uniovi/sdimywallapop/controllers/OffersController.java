@@ -93,8 +93,8 @@ public class OffersController {
         return "offer/add";
     }
 
-    @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, Principal principal){
+    @RequestMapping(value = "/offer/buy/{id}/{page}", method = RequestMethod.GET)
+    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, @PathVariable int page, Principal principal){
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
@@ -109,7 +109,7 @@ public class OffersController {
         }
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user);
-        return "redirect:/offer/list";
+        return "redirect:/offer/list?page=" + page;
     }
 
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)

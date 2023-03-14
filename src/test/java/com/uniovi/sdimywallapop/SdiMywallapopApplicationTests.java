@@ -423,7 +423,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
                 (By.xpath("//*[@id=\"main-container\"]/div[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador
@@ -452,7 +452,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
                 (By.xpath("//*[@id=\"main-container\"]/div[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador (está a cero)
