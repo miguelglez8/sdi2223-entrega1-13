@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SdiMywallapopApplicationTests {
 
     //Miguel
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+//    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+//    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
-    // static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-    // static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+     static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -311,9 +311,10 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(15)
     public void PR15() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/add");
         PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","24");
+        driver.get("http://localhost:8090/offer/myList?page=2");
         String checkText = "Mesa";
         List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, elements.get(0).getText());
@@ -322,7 +323,7 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(16)
     public void PR16() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/add");
         PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","-24");
         String checkText = "El precio no puede ser negativo.";
@@ -333,30 +334,32 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(17)
     public void PR17() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/myList");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(4, elements.size());
+        Assertions.assertEquals(5, elements.size());
     }
 
     @Test
     @Order(18)
     public void PR18() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
-        driver.get("http://localhost:8090/offer/myList");
-        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Mesa')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        driver.get("http://localhost:8090/offer/myList?size=200");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), '€')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        driver.get("http://localhost:8090/offer/myList?size=200");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(3, elements.size());
+        Assertions.assertEquals(10, elements.size());
     }
 
     @Test
     @Order(19)
     public void PR19() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
-        driver.get("http://localhost:8090/offer/myList");
-        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Oferta 4')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        driver.get("http://localhost:8090/offer/myList?size=200");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), '€')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 9);
+        driver.get("http://localhost:8090/offer/myList?size=200");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(2, elements.size());
+        Assertions.assertEquals(9, elements.size());
     }
 
     /**
