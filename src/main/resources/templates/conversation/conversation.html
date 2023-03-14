@@ -3,8 +3,8 @@
 <head th:replace="fragments/head"/>
 <body>
 <head th:replace="fragments/nav"/>
-<div class="container" id="main-container">
-    <h2 th:text="#{conversation.title} + ' &quot' + ${offer.title} + '&quot'"></h2>
+<div class="container" th:fragment="main-container" id="main-container">
+    <h1 th:text="#{conversation.title} + ' &quot' + ${offer.title} + '&quot'"></h1>
     <tr th:each="message : ${conversation.messages}">
         <h2 th:text="${message.user.name}"></h2>
         <div class="card-body">
@@ -12,14 +12,23 @@
         </div>
     </tr>
     <form class="form-horizontal" method="post" th:if="${#lists.isEmpty(conversationList)}" th:action="${'/conversation/resume/' + conversation.id}" th:object="${message}">
-        <div>
-            <label class="control-label col-sm-2" for="text">Envie un mensaje:</label>
+        <div style="display:flex; justify-content: center;">
+            <label class="control-label col-sm-2" for="text" th:text="#{conversation.sendMessage}"></label>
             <input type="text" class="form-control" id="text" name="text"
                    placeholder="Mensaje" th:value="${message.text}" required="true"/>
-            <button type="submit" class="btn btn-primary">Enviar</button>
+            <button type="submit" class="btn btn-primary" th:text="#{conversation.sendButton}"></button>
         </div>
     </form>
 </div>
+<!--<script th:inline="javascript">-->
+<!--    /*<![CDATA[*/-->
+<!--    setInterval(function() {-->
+<!--        let urlUpdate = '/conversation/update';-->
+<!--        $("#main-container").load(urlUpdate);-->
+<!--    }-->
+<!--    , 1000);-->
+<!--    /*]]>*/-->
+<!--</script>-->
 <footer th:replace="fragments/footer"></footer>
 </body>
 </html>

@@ -61,8 +61,11 @@ public class OffersController {
     }
 
     @RequestMapping("/offer/list/update")
-    public String updateList(Model model, Pageable pageable) {
+    public String updateList(Model model, Pageable pageable, Principal principal) {
         Page<Offer> offers = offersService.getOffers(pageable);
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("offerList", offers.getContent());
         return "offer/list :: tableOffers";
     }

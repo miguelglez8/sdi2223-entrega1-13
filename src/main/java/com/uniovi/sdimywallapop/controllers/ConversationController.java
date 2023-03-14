@@ -28,29 +28,28 @@ public class ConversationController {
     @Autowired
     private OffersService offersService;
 
-    // TODO: Validador
-
     @RequestMapping(value = "/conversation/start/{id}", method = RequestMethod.GET)
     public String startConversation(Model model, @PathVariable Long id, Principal principal){
-        String dni = principal.getName();
+        String email = principal.getName();
         Offer offer = offersService.searchById(id);
-        // User buyer = usersService.getUserByDni(dni);
+        User buyer = usersService.getUserByEmail(email);
         User seller = offer.getUser();
-        Conversation conversation = conversationService.searchByBuyerAndOffer(dni, id);
+        Conversation conversation = conversationService.searchByBuyerAndOffer(email, id);
+
+        if (buyer.getEmail().equals(seller.getEmail()))
+            return "redirect:/offer/list";
 
         Conversation newConversation;
         if (conversation == null) {
-            // newConversation = new Conversation(seller, buyer, offer);
-            //conversationService.addConversation(newConversation);
-            //model.addAttribute("conversation", newConversation);
-            //System.out.println("is null " + newConversation.getId());
+            newConversation = new Conversation(seller, buyer, offer);
+            conversationService.addConversation(newConversation);
+            model.addAttribute("conversation", newConversation);
         }
         else {
             model.addAttribute("conversation", conversation);
-            System.out.println("is NOT null " + conversation.getId());
         }
 
-        // model.addAttribute("buyer", buyer);
+        model.addAttribute("buyer", buyer);
         model.addAttribute("seller", seller);
         model.addAttribute("offer", offer);
 
@@ -67,7 +66,6 @@ public class ConversationController {
         Offer offer = conversation.getOffer();
 
         model.addAttribute("conversation", conversation);
-        System.out.println("is NOT null " + conversation.getId());
 
         model.addAttribute("buyer", buyer);
         model.addAttribute("seller", seller);
@@ -80,25 +78,40 @@ public class ConversationController {
 
     @RequestMapping(value = "/conversation/start/{id}", method = RequestMethod.POST)
     public String sendMessage(Model model, @ModelAttribute Message message, @PathVariable Long id, Principal principal) {
-        String dni = principal.getName();
-        // User user = usersService.getUserByDni(dni);
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
-        //message.setUser(user);
-        //Conversation conversation = conversationService.searchByUserAndOffer(user, offer);
-        //message.setConversation(conversation);
+        message.setUser(user);
+        Conversation conversation = conversationService.searchByUserAndOffer(user, offer);
+        message.setConversation(conversation);
         conversationService.addMessage(message);
         return "redirect:/conversation/start/" + id;
     }
 
     @RequestMapping(value = "/conversation/resume/{id}", method = RequestMethod.POST)
     public String sendMessageResume(Model model, @ModelAttribute Message message, @PathVariable Long id, Principal principal) {
-        String dni = principal.getName();
-        // User user = usersService.getUserByDni(dni);
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
         Conversation conversation = conversationService.searchById(id);
-        //message.setUser(user);
+        message.setUser(user);
         message.setConversation(conversation);
         conversationService.addMessage(message);
         return "redirect:/conversation/resume/" + id;
+    }
+
+    @RequestMapping("/conversation/list")
+    public String getList(Model model, Pageable pageable, Principal principal,
+                          @RequestParam(required = false) String searchText){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        Page<Conversation> conversations = conversationService.searchConversationsTakingPartBy(pageable, user);
+
+        model.addAttribute("conversationList", conversations.getContent());
+        model.addAttribute("page", conversations);
+        model.addAttribute("user", user);
+        model.addAttribute("searchText", searchText);
+
+        return "conversation/list";
     }
 
     @RequestMapping("/conversation/list/update")
@@ -108,18 +121,13 @@ public class ConversationController {
         return "conversation/list :: tableConversations";
     }
 
-    @RequestMapping("/conversation/list")
-    public String getList(Model model, Pageable pageable, Principal principal,
-                          @RequestParam(required = false) String searchText){
-        String dni = principal.getName();
-        // User user = usersService.getUserByDni(dni);
-        //Page<Conversation> conversations = conversationService.searchConversationsTakingPartBy(pageable, user);
+    @RequestMapping(value = "/conversation/update")
+    public String getList(Model model, @ModelAttribute Conversation conversation){
+        Conversation updatedConversation = conversationService.searchById(conversation.getId());
 
-        //model.addAttribute("offerList", conversations.getContent());
-        //model.addAttribute("page", conversations);
-        // model.addAttribute("user", user);
-        model.addAttribute("searchText", searchText);
+        model.addAttribute("conversation", updatedConversation);
+        model.addAttribute("offer", updatedConversation.getOffer());
 
-        return "conversation/list";
+        return "conversation/conversation :: main-container";
     }
 }
