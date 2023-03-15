@@ -107,6 +107,8 @@ public class UsersController {
         signUpFormValidator.validate(user, result);
         if (result.hasErrors()) {
             return "signup";
+        } else {
+            logServices.addLog(new Log("ALTA", new Date(), "Mapeo: signup /signup"));
         }
         user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
@@ -116,7 +118,7 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Authentication authentication) {
+    public String login() {
         return "login";
     }
 

@@ -4,6 +4,7 @@ import com.uniovi.sdimywallapop.entities.Log;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ public class LogServices {
 
     public List<Log> getLogs() {
         List<Log> logs = new ArrayList<Log>();
-        logRepository.findAll().forEach(logs::add);
+        logRepository.findAllOrderByDate().forEach(logs::add);
         return logs;
     }
 

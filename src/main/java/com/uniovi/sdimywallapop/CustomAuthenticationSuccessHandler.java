@@ -13,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -32,7 +34,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException, ServletException {
         String username = authentication.getName();
         logServices.addLog(new Log("LOGIN-EX", new Date(), username));
-        redirectStrategy.sendRedirect(request, response, "/");
+        List<String> roles = new ArrayList<>();
+        for(var x : authentication.getAuthorities()) {
+            roles.add(x.toString());
+        }
+        if (roles.contains("ROLE_ADMIN")) {
+            redirectStrategy.sendRedirect(request, response, "/user/list");
+        } else {
+            redirectStrategy.sendRedirect(request, response, "/offer/myList");
+        }
     }
 
 }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 public class LogController {
 
@@ -20,7 +22,7 @@ public class LogController {
 
     @RequestMapping("/log/list/update")
     public String updateList(Model model){
-        model.addAttribute("logList", logServices.getLogs() );
+        model.addAttribute("logList", logServices.getLogs());
         return "log/list :: tableLogs";
     }
 

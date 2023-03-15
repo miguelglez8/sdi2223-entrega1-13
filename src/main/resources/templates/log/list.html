@@ -36,7 +36,8 @@
       </tbody>
     </table>
   </div>
-  <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar todos los logs?')">Eliminar logs</button>
+  <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar todos los logs?')"
+          th:text="#{log.list.btn.del}"></button>
 </form>
 <footer th:replace="fragments/footer"/>
 </body>
