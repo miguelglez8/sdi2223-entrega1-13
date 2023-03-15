@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org/%22%3E">
+<head th:replace="fragments/head"/>
+<body>
+<!-- Barra de Navegación superior -->
+<nav th:replace="fragments/nav"/>
+<form class="container" method="post" action="/user/delete">
+  <h2 th:text="#{log.list.title}"></h2>
+  <p th:text="#{log.list.desc}"></p>
+  <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
+  <script>
+    $("#updateButton").click(function () {
+      $("#tableLogs").load('/log/list/update');
+    });
+  </script>
+  <div class="table-responsive">
+    <table class="table table-hover" th:fragment="tableLogs" id="tableLogs">
+      <thead>
+      <tr>
+        <th scope="col" th:text="#{log.list.type}"></th>
+        <th scope="col" th:text="#{log.list.date}"></th>
+        <th scope="col" th:text="#{log.list.description}"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="log : ${logList}">
+        <td scope="row" th:text="${log.type}">PET</td>
+        <td scope="row" th:text="${log.date}">Fecha</td>
+        <td scope="row" th:text="${log.description}">Descripcion</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar todos los logs?')">Eliminar logs</button>
+</form>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>

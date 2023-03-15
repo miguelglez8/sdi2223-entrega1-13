@@ -91,7 +91,7 @@ public class User {
     public Set<Offer> getOffers() {
         return offers;
     }
-    public void setOffers(Set<Offer> user1Offers) {
+    public void setOffers(Set user1Offers) {
         this.offers = user1Offers;
     }
 

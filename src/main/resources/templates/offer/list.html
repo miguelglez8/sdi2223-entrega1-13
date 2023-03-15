@@ -49,20 +49,17 @@
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td>
                     <div th:if="${offer.isSold()==false}">
-                        <a th:href="${'/offer/buy/'+ offer.id + '/' + (page != null ? page.getNumber() : '0')}"
-                           th:text="#{offer.list.buy}"></a>
+                        <a th:href="${'/offer/buy/'+offer.id}" th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">
                         <a th:text="#{offer.list.sold}"></a>
                     </div>
                 </td>
-                <td><a th:if="${!#strings.equals(offer.user.email, user.email)}"
-                       th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
+                <td><a th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
             </tr>
             </tbody>
             <div th:each="error : ${errors}">
-                <span class="text-danger" th:if="${error.equals('Error.offer.price.minus')}"
-                      th:text="#{Error.offer.price.minus}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.price.minus')}" th:text="#{Error.offer.price.minus}"></span>
                 <span class="text-danger" th:if="${error.equals('Error.offer.sold')}" th:text="#{Error.offer.sold}"></span>
                 <span class="text-danger" th:if="${error.equals('Error.offer.user')}" th:text="#{Error.offer.user}"></span>
             </div>

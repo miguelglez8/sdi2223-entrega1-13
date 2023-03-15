@@ -1,12 +1,15 @@
 package com.uniovi.sdimywallapop.controllers;
 
+import com.uniovi.sdimywallapop.entities.Log;
 import com.uniovi.sdimywallapop.entities.User;
 
+import com.uniovi.sdimywallapop.services.LogServices;
 import com.uniovi.sdimywallapop.services.RolesService;
 import com.uniovi.sdimywallapop.services.SecurityService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.SignUpFormValidator;
 import org.springframework.beans.factory.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,7 +18,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.context.IContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -26,6 +34,8 @@ public class UsersController {
     private SignUpFormValidator signUpFormValidator;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private LogServices logServices;
 
     @Autowired
     private SecurityService securityService;
@@ -35,6 +45,7 @@ public class UsersController {
         model.addAttribute("usersList", usersService.getUsers());
         return "user/list";
     }
+
     @RequestMapping(value = "/user/add")
     public String getUser(Model model) {
         model.addAttribute("rolesList", rolesService.getRoles());
@@ -46,6 +57,7 @@ public class UsersController {
         usersService.addUser(user);
         return "redirect:/user/list";
     }
+
     @RequestMapping("/user/details/{id}")
     public String getDetail(Model model, @PathVariable Long id) {
         model.addAttribute("user", usersService.getUser(id));
@@ -65,12 +77,14 @@ public class UsersController {
 
         return "redirect:/user/list";
     }
+
     @RequestMapping(value = "/user/edit/{id}")
     public String getEdit(Model model, @PathVariable Long id) {
         User user = usersService.getUser(id);
         model.addAttribute("user", user);
         return "user/edit";
     }
+
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         User originalUser = usersService.getUser(user.getId());
@@ -83,10 +97,11 @@ public class UsersController {
     }
 
     @RequestMapping("/user/list/update")
-    public String updateList(Model model){
-        model.addAttribute("usersList", usersService.getUsers() );
+    public String updateList(Model model) {
+        model.addAttribute("usersList", usersService.getUsers());
         return "user/list :: tableUsers";
     }
+
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@Validated User user, BindingResult result) {
         signUpFormValidator.validate(user, result);
@@ -96,24 +111,26 @@ public class UsersController {
         user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
         securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
+        logServices.addLog(new Log("LOGIN-EX", new Date(), user.getEmail()));
         return "redirect:home";
     }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(Authentication authentication) {
         return "login";
     }
 
-    @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/home"}, method = RequestMethod.GET)
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         String email = auth.getName();
         User activeUser = usersService.getUserByEmail(email);
-            if (activeUser.getRole().equals("ROLE_ADMIN")) {
-                return "redirect:user/list";
-            }else{
-                return "redirect:offer/myList";
-            }
+        if (activeUser.getRole().equals("ROLE_ADMIN")) {
+            return "redirect:user/list";
+        } else {
+            return "redirect:offer/myList";
+        }
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
