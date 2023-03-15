@@ -1,10 +1,7 @@
 package com.uniovi.sdimywallapop;
 
-import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.pageobjects.*;
 import com.uniovi.sdimywallapop.services.OffersService;
-import com.uniovi.sdimywallapop.services.UsersService;
-import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -25,8 +22,8 @@ class SdiMywallapopApplicationTests {
     static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
-    // static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-    // static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+     //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+     //static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -72,8 +69,6 @@ class SdiMywallapopApplicationTests {
         // Rellenamos el formulario.
         PO_SignUpView.fillForm(driver, "test_", "test_", "test@email.com",
                 "123456", "123456");
-
-
     }
 
     /**
@@ -311,9 +306,10 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(15)
     public void PR15() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/add");
         PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","24");
+        driver.get("http://localhost:8090/offer/myList?page=2");
         String checkText = "Mesa";
         List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, elements.get(0).getText());
@@ -322,7 +318,7 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(16)
     public void PR16() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/add");
         PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","-24");
         String checkText = "El precio no puede ser negativo.";
@@ -333,30 +329,32 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(17)
     public void PR17() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
         driver.get("http://localhost:8090/offer/myList");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(4, elements.size());
+        Assertions.assertEquals(5, elements.size());
     }
 
     @Test
     @Order(18)
     public void PR18() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
-        driver.get("http://localhost:8090/offer/myList");
-        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Mesa')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        driver.get("http://localhost:8090/offer/myList?size=200");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), '€')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        driver.get("http://localhost:8090/offer/myList?size=200");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(3, elements.size());
+        Assertions.assertEquals(10, elements.size());
     }
 
     @Test
     @Order(19)
     public void PR19() {
-        PO_PrivateView.refactorLogging(driver, "99999990A", "123456");
-        driver.get("http://localhost:8090/offer/myList");
-        PO_PrivateView.clickElement(driver, "//td[contains(text(), 'Oferta 4')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 0);
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        driver.get("http://localhost:8090/offer/myList?size=200");
+        PO_PrivateView.clickElement(driver, "//td[contains(text(), '€')]/following-sibling::*/a[contains(@href, 'offer/delete')]", 9);
+        driver.get("http://localhost:8090/offer/myList?size=200");
         List<WebElement> elements = driver.findElements(By.className("filas-list-offers"));
-        Assertions.assertEquals(2, elements.size());
+        Assertions.assertEquals(9, elements.size());
     }
 
     /**
@@ -423,9 +421,9 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
-                (By.xpath("//*[@id=\"main-container\"]/div[1]/h4")).getText()));
+                (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador
         Assertions.assertEquals(100 - offersService.getOffers().stream()
                 .filter(offer -> offer.isSold()).toList().get(0).getPrice(), value);
@@ -452,9 +450,9 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
-                (By.xpath("//*[@id=\"main-container\"]/div[1]/h4")).getText()));
+                (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador (está a cero)
         Assertions.assertEquals(100 - offersService.getOffers().stream()
                 .filter(offer -> offer.isSold()).toList().get(0).getPrice(), value);
@@ -463,7 +461,7 @@ class SdiMywallapopApplicationTests {
     }
 
     /**
-     * PR23. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea mayor a nuestro saldo (100)
+     * PR24. Ir a la lista de ofertas, y comprar una oferta cuyo precio sea mayor a nuestro saldo (100)
      * comprobar que no hay un error, que se actualiza la vista y no se descuenta el saldo
      */
     @Test
@@ -483,11 +481,11 @@ class SdiMywallapopApplicationTests {
         // la intentamos comprar
         driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
-                (By.xpath("//*[@id=\"main-container\"]/div[1]/h4")).getText()));
+                (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que el marcador sigue igual (a 100) porque no se pudo comprar
         Assertions.assertEquals(value, 100);
         // seleccionamos el mensaje que aparece
-        String textFail = driver.findElement(By.xpath("//*[@id=\"main-container\"]/div[2]/div/span")).getText();
+        String textFail = driver.findElement(By.xpath("//*[@id=\"main-container\"]/div[1]/div/span")).getText();
         // comprobamos que se corresponde con el mensaje de saldo no suficiente
         Assertions.assertEquals("El precio de la oferta es superior a su saldo (Saldo no suficiente)", textFail);
         // logout
@@ -495,7 +493,7 @@ class SdiMywallapopApplicationTests {
     }
 
     /**
-     * PR23. Ir a la lista de ofertas compradas
+     * PR25. Ir a la lista de ofertas compradas
      * comprobar que están las ofertas que hemos comprado
      */
     @Test
@@ -521,6 +519,88 @@ class SdiMywallapopApplicationTests {
         // vemos que solo puede haber una
         Assertions.assertEquals(offersService.getOffers().stream()
                 .filter(offer -> offer.isSold() && offer.getEmailComprador().equals("user04@email.com")).toList().size(), rows.size());
+        // logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    /**
+     * PR29. Ir a las siguientes vistas: pantalla principal, lista de usuarios, lista de todas las ofertas y
+     * lista de las ofertas compradas
+     * comprobar que están los elementos de las vistas internacionalizados
+     */
+    @Test
+    @Order(29)
+    public void PR29() {
+        // cambiar de idioma a español
+        PO_PrivateView.changeLanguage(driver, "Spanish");
+        // página principal
+        // texto en español
+        String bienvenida = driver.findElement(By.xpath("/html/body/div/h2")).getText();
+        // comprobamos que está en español
+        Assertions.assertEquals(PO_HomeView.getP().getString("welcome.message", PO_Properties.getSPANISH())
+                , bienvenida);
+        // cambiar de idioma a inglés
+        PO_PrivateView.changeLanguage(driver, "English");
+        // texto en inglés
+        String welcome = driver.findElement(By.xpath("/html/body/div/h2")).getText();
+        // comprobamos que está en inglés
+        Assertions.assertEquals(PO_HomeView.getP().getString("welcome.message", PO_Properties.getENGLISH())
+                , welcome);
+        // cambiar de idioma a español
+        PO_PrivateView.changeLanguage(driver, "Spanish");
+        // login
+        PO_PrivateView.refactorLogging(driver, "admin@email.com", "admin");
+        // listado de usuarios
+        // texto en español
+        String listadoUsuarios = driver.findElement(By.xpath("/html/body/form/h2")).getText();
+        // comprobamos que está en español
+        Assertions.assertEquals(PO_HomeView.getP().getString("user.list.title", PO_Properties.getSPANISH())
+                , listadoUsuarios);
+        // cambiar de idioma a inglés
+        PO_PrivateView.changeLanguage(driver, "English");
+        // texto en inglés
+        String listUsers = driver.findElement(By.xpath("/html/body/form/h2")).getText();
+        // comprobamos que está en inglés
+        Assertions.assertEquals(PO_HomeView.getP().getString("user.list.title", PO_Properties.getENGLISH())
+                , listUsers);
+        // logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+        // login
+        PO_PrivateView.refactorLogging(driver, "user01@email.com", "user01");
+        // cambiar de idioma a español
+        PO_PrivateView.changeLanguage(driver, "Spanish");
+        // vamos a la pantalla de todas las ofertas
+        driver.get("http://localhost:8090/offer/list");
+        // texto en español
+        String buscar = driver.findElement(By.xpath("//*[@id=\"main-container\"]/p[1]")).getText();
+        // comprobamos que está en español
+        Assertions.assertEquals(PO_HomeView.getP().getString("offer.list.search.title", PO_Properties.getSPANISH())
+                , buscar);
+        // cambiar de idioma a inglés
+        PO_PrivateView.changeLanguage(driver, "English");
+        // texto en inglés
+        String search = driver.findElement(By.xpath("//*[@id=\"main-container\"]/p[1]")).getText();
+        // comprobamos que está en inglés
+        Assertions.assertEquals(PO_HomeView.getP().getString("offer.list.search.title", PO_Properties.getENGLISH())
+                , search);
+        // vamos a la pantalla de todas las ofertas compradas
+        driver.get("http://localhost:8090/offer/listBuy");
+        // cambiar de idioma a español
+        PO_PrivateView.changeLanguage(driver, "Spanish");
+        // texto en español
+        String parrafoOfertas = driver.findElement(By.xpath("//*[@id=\"main-container\"]/p")).getText();
+        // comprobamos que está en español
+        Assertions.assertEquals(PO_HomeView.getP().getString("offer.list.msg", PO_Properties.getSPANISH())
+                , parrafoOfertas);
+        // cambiar de idioma a inglés
+        PO_PrivateView.changeLanguage(driver, "English");
+        // texto en inglés
+        String paragraphOffers = driver.findElement(By.xpath("//*[@id=\"main-container\"]/p")).getText();
+        // comprobamos que está en inglés
+        Assertions.assertEquals(PO_HomeView.getP().getString("offer.list.msg", PO_Properties.getENGLISH())
+                , paragraphOffers);
+        // cambiar de idioma a español
+        PO_PrivateView.changeLanguage(driver, "Spanish");
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
     }

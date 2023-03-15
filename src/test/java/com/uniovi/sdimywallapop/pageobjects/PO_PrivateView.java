@@ -4,7 +4,6 @@ import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
@@ -49,6 +48,17 @@ public class PO_PrivateView extends PO_NavView {
     public static void clickElement(WebDriver driver, String s, int i) {
         List<WebElement> elements = PO_View.checkElementBy(driver, "free", s);
         elements.get(i).click();
+    }
+
+    public static void changeLanguage(WebDriver driver, String language) {
+        if (language.equals("Spanish")) {
+            driver.findElement(By.xpath("//*[@id=\"btnLanguage\"]")).click();
+            driver.findElement(By.xpath("//*[@id=\"btnSpanish\"]")).click();
+        } else if (language.equals("English")) {
+            driver.findElement(By.xpath("//*[@id=\"btnLanguage\"]")).click();
+            driver.findElement(By.xpath("//*[@id=\"btnEnglish\"]")).click();
+        }
+
     }
 }
 

@@ -16,7 +16,7 @@ import java.util.Locale;
 public class OfferBuyValidator {
     public List<String> validate(Offer offer, User user) {
         List<String> errores = new ArrayList<>();
-        if (offer.getUser().getMoney() < offer.getPrice()) {
+        if (user.getMoney() < offer.getPrice()) {
             errores.add("Error.offer.price.minus");
         } if (offer.isSold()) {
             errores.add("Error.offer.sold");
