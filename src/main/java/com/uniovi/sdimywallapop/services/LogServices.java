@@ -33,4 +33,14 @@ public class LogServices {
         logRepository.save(log);
     }
 
+    public List<Log> getPetLogs(String tipo) {
+        List<Log> logs = new ArrayList<Log>();
+        logRepository.findAllLogByParameter(tipo).forEach(logs::add);
+        return logs;
+    }
+
+    public void deleteLogs(){
+        logRepository.deleteAll();
+    }
+
 }

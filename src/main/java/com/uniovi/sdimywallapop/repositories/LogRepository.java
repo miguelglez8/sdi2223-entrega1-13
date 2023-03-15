@@ -12,4 +12,7 @@ public interface LogRepository extends CrudRepository<Log, Long> {
     @Query("Select l from Log l order by l.date desc")
     List<Log> findAllOrderByDate();
 
+    @Query("Select l from Log l where l.type=?1 order by l.date desc")
+    List<Log> findAllLogByParameter(String tipo);
+
 }
