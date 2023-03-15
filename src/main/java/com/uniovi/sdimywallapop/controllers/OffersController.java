@@ -57,6 +57,7 @@ public class OffersController {
         offers = offersService.getOffersForUser(pageable, user);
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
+        model.addAttribute("user", user);
         return "offer/myList";
     }
 
@@ -67,6 +68,7 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("offerList", offers.getContent());
+        model.addAttribute("user", user);
         return "offer/list :: tableOffers";
     }
 
@@ -75,6 +77,7 @@ public class OffersController {
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
+        model.addAttribute("user", user);
         return "offer/listBuy";
     }
 
@@ -83,18 +86,22 @@ public class OffersController {
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
+        model.addAttribute("user", user);
         return "offer/listBuy :: tableOffersB";
     }
 
     @RequestMapping(value = "/offer/add")
-    public String getOffer(Model model) {
+    public String getOffer(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         model.addAttribute("offerList", offersService.getOffers());
         model.addAttribute("offer", new Offer());
+        model.addAttribute("user", user);
         return "offer/add";
     }
 
-    @RequestMapping(value = "/offer/buy/{id}/{page}", method = RequestMethod.GET)
-    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, @PathVariable int page, Principal principal){
+    @RequestMapping(value = "/offer/buy", method = RequestMethod.GET)
+    public String buyOffer(Model model, Pageable pageable, @RequestParam Long id, @RequestParam int page, Principal principal){
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
@@ -124,6 +131,7 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
+        model.addAttribute("user", user);
         return "redirect:/offer/myList";
     }
 

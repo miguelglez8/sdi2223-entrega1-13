@@ -111,4 +111,7 @@ public class User {
         this.money -= price;
     }
 
+    public void updateMoney() {
+        this.setMoney(100.0);
+    }
 }

@@ -115,18 +115,24 @@ public class ConversationController {
     }
 
     @RequestMapping("/conversation/list/update")
-    public String updateList(Model model, Pageable pageable) {
+    public String updateList(Model model, Pageable pageable, Principal principal) {
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
         Page<Conversation> conversations = conversationService.getConversations(pageable);
         model.addAttribute("conversationList", conversations.getContent());
+        model.addAttribute("user", user);
         return "conversation/list :: tableConversations";
     }
 
     @RequestMapping(value = "/conversation/update")
-    public String getList(Model model, @ModelAttribute Conversation conversation){
+    public String getList(Model model, @ModelAttribute Conversation conversation, Principal principal){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
         Conversation updatedConversation = conversationService.searchById(conversation.getId());
 
         model.addAttribute("conversation", updatedConversation);
         model.addAttribute("offer", updatedConversation.getOffer());
+        model.addAttribute("user", user);
 
         return "conversation/conversation :: main-container";
     }

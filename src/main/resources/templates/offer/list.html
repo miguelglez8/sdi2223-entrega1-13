@@ -13,9 +13,6 @@
         </div>
         <button type="submit" class="btn btn-primary" th:text="#{offer.list.search}"></button>
     </form>
-    <div class="form-group">
-        <h3 th:text="#{offer.list.cash}"> </h3> <h4 th:text="${user.money}"></h4>
-    </div>
     <p th:text="#{offer.list.msg}"></p>
     <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
     <script th:inline="javascript">
@@ -49,7 +46,7 @@
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td>
                     <div th:if="${offer.isSold()==false}">
-                        <a th:href="${'/offer/buy/'+ offer.id + '/' + (page != null ? page.getNumber() : '0')}"
+                        <a th:href="${'/offer/buy?id='+ offer.id + '&page=' + (page != null ? page.getNumber() : '0')}"
                            th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">

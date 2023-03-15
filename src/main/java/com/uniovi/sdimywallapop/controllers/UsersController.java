@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -31,12 +32,18 @@ public class UsersController {
     private SecurityService securityService;
 
     @RequestMapping("/user/list")
-    public String getListado(Model model) {
+    public String getListado(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("usersList", usersService.getUsers());
         return "user/list";
     }
     @RequestMapping(value = "/user/add")
-    public String getUser(Model model) {
+    public String getUser(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("rolesList", rolesService.getRoles());
         return "user/add";
     }
@@ -83,8 +90,11 @@ public class UsersController {
     }
 
     @RequestMapping("/user/list/update")
-    public String updateList(Model model){
+    public String updateList(Model model, Principal principal){
         model.addAttribute("usersList", usersService.getUsers() );
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         return "user/list :: tableUsers";
     }
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -99,12 +109,13 @@ public class UsersController {
         return "redirect:home";
     }
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
 
     @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
-    public String home(Model model) {
+    public String home() {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         String email = auth.getName();
