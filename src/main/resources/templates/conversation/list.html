@@ -8,7 +8,6 @@
   <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
   <script th:inline="javascript">
     /*<![CDATA[*/
-
     $( "#updateButton" ).click(function() {
       let numberPage = [[${param.page}]];
       let urlUpdate = '/conversation/list/update';

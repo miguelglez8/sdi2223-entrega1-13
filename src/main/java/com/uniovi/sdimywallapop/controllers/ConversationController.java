@@ -44,9 +44,11 @@ public class ConversationController {
             newConversation = new Conversation(seller, buyer, offer);
             conversationService.addConversation(newConversation);
             model.addAttribute("conversation", newConversation);
+            model.addAttribute("tableMessages", newConversation.getMessages());
         }
         else {
             model.addAttribute("conversation", conversation);
+            model.addAttribute("tableMessages", conversation.getMessages());
         }
 
         model.addAttribute("buyer", buyer);
@@ -66,6 +68,7 @@ public class ConversationController {
         Offer offer = conversation.getOffer();
 
         model.addAttribute("conversation", conversation);
+        model.addAttribute("tableMessages", conversation.getMessages());
 
         model.addAttribute("buyer", buyer);
         model.addAttribute("seller", seller);
@@ -121,13 +124,10 @@ public class ConversationController {
         return "conversation/list :: tableConversations";
     }
 
-    @RequestMapping(value = "/conversation/update")
-    public String getList(Model model, @ModelAttribute Conversation conversation){
-        Conversation updatedConversation = conversationService.searchById(conversation.getId());
-
-        model.addAttribute("conversation", updatedConversation);
-        model.addAttribute("offer", updatedConversation.getOffer());
-
-        return "conversation/conversation :: main-container";
+    @RequestMapping(value = "/conversation/start/update/{id}")
+    public String getList(Model model,  @PathVariable Long id){
+        Conversation conversation = conversationService.searchById(id);
+        model.addAttribute("tableMessages", conversation.getMessages());
+        return "conversation/conversation :: tableMessages";
     }
 }
