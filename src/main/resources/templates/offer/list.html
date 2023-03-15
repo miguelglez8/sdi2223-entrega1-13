@@ -54,7 +54,7 @@
                     </div>
                 </td>
                 <td><a th:if="${user != null && !#strings.equals(offer.user.email, user.email)}"
-                       th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
+                       th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.list.start}"></a></td>
             </tr>
             </tbody>
             <div th:each="error : ${errors}">

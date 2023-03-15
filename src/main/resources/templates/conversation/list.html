@@ -8,7 +8,6 @@
   <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
   <script th:inline="javascript">
     /*<![CDATA[*/
-
     $( "#updateButton" ).click(function() {
       let numberPage = [[${param.page}]];
       let urlUpdate = '/conversation/list/update';
@@ -26,13 +25,15 @@
         <th scope="col" th:text="#{conversation.mail}"></th>
         <th scope="col" th:text="#{conversation.offer}"></th>
         <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="conversation : ${conversationList}">
         <td th:text="${conversation.seller.email}"></td>
         <td th:text="${conversation.offer.title}"></td>
-        <td><a th:href="${'/conversation/resume/'+conversation.id}" th:text="#{conversation.start}"></a></td>
+        <td><a th:href="${'/conversation/resume/'+conversation.id}" th:text="#{conversation.list.start}"></a></td>
+        <td><a th:href="${'/conversation/remove/'+conversation.id}" th:text="#{conversation.list.remove}"></a></td>
       </tr>
       </tbody>
     </table>
