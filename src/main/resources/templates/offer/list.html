@@ -55,7 +55,7 @@
                         <a th:text="#{offer.list.sold}"></a>
                     </div>
                 </td>
-                <td><a th:if="${!#strings.equals(offer.user.email, user.email)}" th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
+                <td><a th:if="${!#strings.equals(offer.user.email, user.email)}" th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.list.start}"></a></td>
             </tr>
             </tbody>
             <div th:each="error : ${errors}">

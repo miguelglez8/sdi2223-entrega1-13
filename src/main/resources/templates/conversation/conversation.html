@@ -24,6 +24,7 @@
                    placeholder="Mensaje" th:value="${message.text}" required="true"/>
             <button type="submit" class="btn btn-primary" th:text="#{conversation.sendButton}"></button>
         </div>
+        <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
     </form>
 </div>
 <script th:inline="javascript">

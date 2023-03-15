@@ -35,6 +35,10 @@ public class ConversationService {
         return conversationRepository.findById(id).get();
     }
 
+    public void deleteConversation(Long id) {
+        conversationRepository.deleteById(id);
+    }
+
     public Conversation searchByBuyerAndOffer(String buyerEmail, Long id) {
         return conversationRepository.findByBuyerAndOffer(buyerEmail, id);
     }
