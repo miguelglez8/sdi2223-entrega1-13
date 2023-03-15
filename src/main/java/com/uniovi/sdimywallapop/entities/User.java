@@ -32,7 +32,7 @@ public class User {
         this.email = email;
     }
     
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private Set<Conversation> conversations;
 
     public User(String name, String lastName, String email) {
