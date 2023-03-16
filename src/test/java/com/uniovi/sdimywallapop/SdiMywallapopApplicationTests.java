@@ -10,9 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-
-
 import javax.swing.text.Document;
 import java.util.List;
 
@@ -23,7 +20,7 @@ class SdiMywallapopApplicationTests {
 
     //Miguel
     static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
@@ -191,7 +188,7 @@ class SdiMywallapopApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, " ", " ");
         // Comprobamos que es el admin
-        String checkText = "Identifícate";
+        String checkText = "Identificate";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -208,7 +205,7 @@ class SdiMywallapopApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user15@email.com", "a");
         // Comprobamos que es el admin
-        String checkText = "Identifícate";
+        String checkText = "Identificate";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -225,7 +222,7 @@ class SdiMywallapopApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "userwwww5@email.com", "a");
         // Comprobamos que es el admin
-        String checkText = "Identifícate";
+        String checkText = "Identificate";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -243,7 +240,7 @@ class SdiMywallapopApplicationTests {
         PO_LoginView.fillLoginForm(driver, "user15@email.com", "user01");
         // Comprobamos que es el admin
         PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
-        String checkText = "Identifícate";
+        String checkText = "Identificate";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -286,7 +283,6 @@ class SdiMywallapopApplicationTests {
      * PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
      * comprobar que la lista se actualiza y dicho usuario desaparece.
      */
-
     @Test
     public void PR13() {
 /*        // Rellenamos el formulario
@@ -316,7 +312,6 @@ class SdiMywallapopApplicationTests {
      * PR14. Ir a la lista de usuarios, borrar el último usuario de la lista,
      * comprobar que la lista se actualiza y dicho usuario desaparece.
      */
-
     @Test
     public void PR14() {
 /*        // Rellenamos el formulario
@@ -570,8 +565,6 @@ class SdiMywallapopApplicationTests {
     @Test
     @Order(29)
     public void PR29() {
-        // cambiar de idioma a español
-        PO_PrivateView.changeLanguage(driver, "Spanish");
         // página principal
         // texto en español
         String bienvenida = driver.findElement(By.xpath("/html/body/div/h2")).getText();
