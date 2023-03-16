@@ -27,7 +27,7 @@
             <label class="control-label col-sm-2" for="text" th:text="#{conversation.sendMessage}"></label>
             <input type="text" class="form-control" id="text" name="text"
                    placeholder="Mensaje" th:value="${message.text}" required="true"/>
-            <button type="submit" class="btn btn-primary" th:text="#{conversation.sendButton}"></button>
+            <button type="submit" class="btn btn-primary" id="sendMessage" th:text="#{conversation.sendButton}"></button>
         </div>
         <span class="text-danger" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
     </form>
