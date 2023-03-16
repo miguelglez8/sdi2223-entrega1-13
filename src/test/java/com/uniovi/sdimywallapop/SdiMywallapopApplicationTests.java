@@ -19,12 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SdiMywallapopApplicationTests {
 
     //Miguel
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+    //static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    //static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
      //static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+
+    //Alves
+    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -558,6 +562,79 @@ class SdiMywallapopApplicationTests {
     }
 
     /**
+     * PR26. Envío de un mensaje a una oferta. Se crea la conversación.
+     * Comprobar que el mensaje aparece en la conversación.
+     */
+    @Test
+    @Order(26)
+    public void PR26() {
+        // Login
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
+        // Mostramos las ofertas
+        driver.get("http://localhost:8090/offer/list?size=200");
+        // Enviamos un mensaje a la oferta 6
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Hola, esto es un mensaje de prueba");
+        // Comprobamos que aparece el mensaje
+        String checkText = "Hola, esto es un mensaje de prueba";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+    }
+
+    /**
+     * PR27. Acceder de nuevo a una conversación ya creada.
+     * Comprobar que el mensaje nuevo aparece en la conversación.
+     */
+    @Test
+    @Order(27)
+    public void PR27() {
+        // Login
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
+        // Mostramos las ofertas
+        driver.get("http://localhost:8090/offer/list?size=200");
+        // Enviamos un mensaje a la oferta 6
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Hola, esto es un mensaje de prueba");
+        // Volvemos a la lista de ofertas
+        driver.get("http://localhost:8090/offer/list?size=200");
+        // Enviamos un nuevo mensaje a la misma oferta
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Y esto es un segundo mensaje");
+        // Comprobamos que aparece el mensaje
+        String checkText = "Y esto es un segundo mensaje";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+    }
+
+    /**
+     * PR28. Mostrar el listado de conversaciones ya abiertas.
+     * Comprobar que el listado contiene la cantidad correcta de conversaciones.
+     */
+    @Test
+    @Order(28)
+    public void PR28() {
+        // Login
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
+        // Mostramos las ofertas
+        driver.get("http://localhost:8090/offer/list?size=200");
+        // Enviamos un mensaje a la oferta 6
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Hola, esto es un mensaje de prueba");
+        // Mostramos las ofertas
+        driver.get("http://localhost:8090/offer/list?size=200");
+        // Enviamos un mensaje a la oferta 21
+        PO_ConversationView.sendMessage(driver, "Oferta 21", "Hola, esto es otro mensaje de prueba");
+        // Vamos al listado de conversaciones
+        driver.get("http://localhost:8090/conversation/list");
+        // Comprobamos que existe una conversación con el usuario que creó la oferta
+        String checkText = "user01@email.com";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+        // Todas las conversaciones que aparecen
+        List<WebElement> rows = driver.findElements(By.className("conversation-list-rows"));
+        // Vemos que la cantidad total de elementos que aparecen son 2
+        Assertions.assertEquals(2, rows.size());
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    /**
      * PR29. Ir a las siguientes vistas: pantalla principal, lista de usuarios, lista de todas las ofertas y
      * lista de las ofertas compradas
      * comprobar que están los elementos de las vistas internacionalizados
@@ -635,6 +712,18 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.changeLanguage(driver, "Spanish");
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    @Test
+    @Order(35)
+    public void PR35() {
+
+    }
+
+    @Test
+    @Order(36)
+    public void PR36() {
+
     }
 
 }

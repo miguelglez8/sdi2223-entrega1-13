@@ -8,6 +8,7 @@ import com.uniovi.sdimywallapop.services.ConversationService;
 import com.uniovi.sdimywallapop.services.OffersService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.MessageValidator;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -36,27 +39,23 @@ public class ConversationController {
     private MessageValidator messageValidator;
 
     @RequestMapping(value = "/conversation/start/{id}", method = RequestMethod.GET)
-    public String startConversation(Model model, @PathVariable Long id, Principal principal){
+    public String startConversation(Model model, @PathVariable Long id, Principal principal) {
+        model.addAttribute("formState", 0);
         String email = principal.getName();
         Offer offer = offersService.searchById(id);
         User buyer = usersService.getUserByEmail(email);
         User seller = offer.getUser();
-        Conversation conversation = conversationService.searchByBuyerAndOffer(email, id);
 
         if (buyer.getEmail().equals(seller.getEmail()))
             return "redirect:/offer/list";
 
-        Conversation newConversation;
+        Conversation conversation = conversationService.searchByBuyerAndOffer(email, id);
         if (conversation == null) {
-            newConversation = new Conversation(seller, buyer, offer);
-            conversationService.addConversation(newConversation);
-            model.addAttribute("conversation", newConversation);
-            model.addAttribute("tableMessages", newConversation.getMessages());
+            conversation = new Conversation(seller, buyer, offer);
         }
-        else {
-            model.addAttribute("conversation", conversation);
-            model.addAttribute("tableMessages", conversation.getMessages());
-        }
+
+        model.addAttribute("conversation", conversation);
+        model.addAttribute("tableMessages", conversation.getMessages());
 
         model.addAttribute("buyer", buyer);
         model.addAttribute("seller", seller);
@@ -69,6 +68,7 @@ public class ConversationController {
 
     @RequestMapping(value = "/conversation/resume/{id}", method = RequestMethod.GET)
     public String resumeConversation(Model model, @PathVariable Long id, Principal principal){
+        model.addAttribute("formState", 1);
         Conversation conversation = conversationService.searchById(id);
         User buyer = conversation.getBuyer();
         User seller = conversation.getSeller();
@@ -90,19 +90,28 @@ public class ConversationController {
     public String sendMessage(Model model, @ModelAttribute @Validated Message message, @PathVariable Long id, Principal principal, BindingResult result) {
         messageValidator.validate(message, result);
         String email = principal.getName();
-        User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
-        Conversation conversation = conversationService.searchByUserAndOffer(user, offer);
+        User seller = offer.getUser();
+        User buyer = usersService.getUserByEmail(email);
+        Conversation conversation = conversationService.searchByUserAndOffer(buyer, offer);
         if (result.hasErrors()) {
-            model.addAttribute("conversation", conversation);
-            model.addAttribute("tableMessages", conversation.getMessages());
+            if (conversation != null)
+                model.addAttribute("tableMessages", conversation.getMessages());
+            else
+                model.addAttribute("tableMessages", new ArrayList<Message>());
 
             model.addAttribute("offer", offer);
             return "conversation/conversation";
         }
-        message.setUser(user);
+        if (conversation == null) {
+            conversation = new Conversation(seller, buyer, offer);
+            conversationService.addConversation(conversation);
+        }
+        message.setUser(buyer);
         message.setConversation(conversation);
         conversationService.addMessage(message);
+        model.addAttribute("conversation", conversation);
+        model.addAttribute("tableMessages", conversation.getMessages());
         return "redirect:/conversation/start/" + id;
     }
 
@@ -112,15 +121,16 @@ public class ConversationController {
         String email = principal.getName();
         User user = usersService.getUserByEmail(email);
         Conversation conversation = conversationService.searchById(id);
+        Offer offer = conversation.getOffer();
         if (result.hasErrors()) {
             model.addAttribute("conversation", conversation);
             model.addAttribute("tableMessages", conversation.getMessages());
-
             model.addAttribute("offer", conversation.getOffer());
             return "conversation/conversation";
         }
         message.setUser(user);
         message.setConversation(conversation);
+        message.setDate(LocalDateTime.now());
         conversationService.addMessage(message);
         return "redirect:/conversation/resume/" + id;
     }
@@ -143,10 +153,8 @@ public class ConversationController {
         String email = principal.getName();
         User user = usersService.getUserByEmail(email);
         List<Long> conversations = conversationService.searchConversationsTakingPartBy(user);
-
-        if(conversations.contains(id)){
+        if (conversations.contains(id))
             conversationService.deleteConversation(id);
-        }
         return "redirect:/conversation/list";
     }
 
@@ -158,9 +166,12 @@ public class ConversationController {
     }
 
     @RequestMapping(value = "/conversation/start/update/{id}")
-    public String getList(Model model,  @PathVariable Long id){
+    public String getList(Model model,  @PathVariable Long id, Principal principal){
         Conversation conversation = conversationService.searchById(id);
-        model.addAttribute("tableMessages", conversation.getMessages());
+        if (conversation != null)
+            model.addAttribute("tableMessages", conversation.getMessages());
+        else
+            model.addAttribute("tableMessages", new ArrayList<Message>());
         return "conversation/conversation :: tableMessages";
     }
 }

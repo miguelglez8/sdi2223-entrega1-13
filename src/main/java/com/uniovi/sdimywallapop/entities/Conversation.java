@@ -29,6 +29,11 @@ public class Conversation {
     public Conversation () {
     }
 
+    public Conversation(User seller, User buyer, Offer offer, Message message) {
+        this(seller, buyer, offer, new ArrayList<Message>());
+        this.messages.add(message);
+    }
+
     public Conversation(User seller, User buyer, Offer offer) {
         this(seller, buyer, offer, new ArrayList<Message>());
     }

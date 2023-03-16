@@ -27,8 +27,7 @@ public class ConversationService {
     }
 
     public Page<Conversation> getConversations(Pageable pageable) {
-        Page<Conversation> conversations = conversationRepository.findAll(pageable);
-        return conversations;
+        return conversationRepository.findAll(pageable);
     }
 
     public Conversation searchById(Long id) {

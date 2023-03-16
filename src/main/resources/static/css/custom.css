@@ -20,3 +20,9 @@ h4 {
     text-align: center;
 }
 /* Sticky footer styles-------------------------------------------------- */
+
+.messageHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
