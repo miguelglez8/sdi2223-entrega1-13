@@ -23,4 +23,7 @@ public interface ConversationRepository extends CrudRepository<Conversation, Lon
 
     @Query("Select c from Conversation c where c.buyer.email LIKE ?1 or c.seller.email LIKE ?1")
     Page<Conversation> findConversationsByUser(Pageable pageable, String dni);
+
+    @Query("Select c.id from Conversation c where c.buyer.email LIKE ?1 or c.seller.email LIKE ?1")
+    List<Long> findConversationsByUser(String email);
 }

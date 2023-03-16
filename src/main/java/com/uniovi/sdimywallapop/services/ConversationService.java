@@ -58,4 +58,8 @@ public class ConversationService {
     public Page<Conversation> searchConversationsTakingPartBy(Pageable pageable, User user) {
         return conversationRepository.findConversationsByUser(pageable, user.getEmail());
     }
+
+    public List<Long> searchConversationsTakingPartBy(User user) {
+        return conversationRepository.findConversationsByUser(user.getEmail());
+    }
 }

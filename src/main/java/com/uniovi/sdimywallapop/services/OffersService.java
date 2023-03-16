@@ -73,4 +73,8 @@ public class OffersService {
     public List<String> validateOffer(Offer offer, User user) {
         return new OfferBuyValidator().validate(offer, user);
     }
+
+    public List<Long> getOffersIdsByUserId(Long id){
+        return offersRepository.findAllByUserID(id);
+    }
 }

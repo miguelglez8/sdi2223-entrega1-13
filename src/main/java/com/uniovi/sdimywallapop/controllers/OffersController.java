@@ -135,8 +135,14 @@ public class OffersController {
     }
 
     @RequestMapping("/offer/delete/{id}")
-    public String deleteOffer(@PathVariable Long id){
-        offersService.deleteOffer(id);
+    public String deleteOffer(@PathVariable Long id,  Principal principal){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
+
+        if(offers.contains(id)){
+            offersService.deleteOffer(id);
+        }
         return "redirect:/offer/myList";
     }
 }

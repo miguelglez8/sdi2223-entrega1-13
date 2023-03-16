@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ConversationController {
@@ -138,8 +139,14 @@ public class ConversationController {
     }
 
     @RequestMapping("/conversation/remove/{id}")
-    public String deleteConversation(@PathVariable Long id) {
-        conversationService.deleteConversation(id);
+    public String deleteConversation(@PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        List<Long> conversations = conversationService.searchConversationsTakingPartBy(user);
+
+        if(conversations.contains(id)){
+            conversationService.deleteConversation(id);
+        }
         return "redirect:/conversation/list";
     }
 
