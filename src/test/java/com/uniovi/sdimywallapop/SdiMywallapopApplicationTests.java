@@ -563,6 +563,36 @@ class SdiMywallapopApplicationTests {
     }
 
     /**
+     * PR26. Envío de un mensaje a una oferta. Se crea la conversación.
+     * Comprobar que el mensaje aparece en la conversación.
+     */
+    @Test
+    @Order(26)
+    public void PR26() {
+
+    }
+
+    /**
+     * PR27. Acceder de nuevo a una conversación ya creada.
+     * Comprobar que el mensaje nuevo aparece en la conversación.
+     */
+    @Test
+    @Order(27)
+    public void PR27() {
+
+    }
+
+    /**
+     * PR28. Mostrar el listado de conversaciones ya abiertas.
+     * Comprobar que el listado contiene la cantidad correcta de conversaciones.
+     */
+    @Test
+    @Order(28)
+    public void PR28() {
+
+    }
+
+    /**
      * PR29. Ir a las siguientes vistas: pantalla principal, lista de usuarios, lista de todas las ofertas y
      * lista de las ofertas compradas
      * comprobar que están los elementos de las vistas internacionalizados
@@ -642,6 +672,18 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.changeLanguage(driver, "Spanish");
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    @Test
+    @Order(35)
+    public void PR35() {
+
+    }
+
+    @Test
+    @Order(36)
+    public void PR36() {
+
     }
 
 }

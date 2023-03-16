@@ -27,8 +27,10 @@ public class ConversationService {
     }
 
     public Page<Conversation> getConversations(Pageable pageable) {
-        Page<Conversation> conversations = conversationRepository.findAll(pageable);
-        return conversations;
+//        List<Conversation> conversations = conversationRepository.findAll();
+//        for (Conversation c : conversations)
+//            if (c.getMessages().isEmpty()) conversationRepository.deleteById(c.getId());
+        return conversationRepository.findAll(pageable);
     }
 
     public Conversation searchById(Long id) {

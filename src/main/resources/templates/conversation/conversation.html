@@ -9,7 +9,10 @@
         <table class="table table-hover" th:fragment="tableMessages" id="tableMessages">
             <tr th:each="message : ${tableMessages}">
                 <td>
-                    <h2 th:text="${message.user.name}"></h2>
+                    <div class="messageHeader">
+                        <h2 th:text="${message.user.name}" style="flex-grow: 1;"></h2>
+                        <p th:text="${message.date}"></p>
+                    </div>
                     <div class="card-body">
                         <p class="card-text" th:text="${message.text}"></p>
                     </div>

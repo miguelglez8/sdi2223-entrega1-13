@@ -8,6 +8,7 @@ import com.uniovi.sdimywallapop.services.ConversationService;
 import com.uniovi.sdimywallapop.services.OffersService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.MessageValidator;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -41,21 +43,20 @@ public class ConversationController {
         Offer offer = offersService.searchById(id);
         User buyer = usersService.getUserByEmail(email);
         User seller = offer.getUser();
-        Conversation conversation = conversationService.searchByBuyerAndOffer(email, id);
 
         if (buyer.getEmail().equals(seller.getEmail()))
             return "redirect:/offer/list";
 
-        Conversation newConversation;
-        if (conversation == null) {
-            newConversation = new Conversation(seller, buyer, offer);
+        Conversation conversation = conversationService.searchByBuyerAndOffer(email, id);
+        if (conversation != null) {
+            model.addAttribute("conversation", conversation);
+            model.addAttribute("tableMessages", conversation.getMessages());
+        }
+        else {
+            Conversation newConversation = new Conversation(seller, buyer, offer);
             conversationService.addConversation(newConversation);
             model.addAttribute("conversation", newConversation);
             model.addAttribute("tableMessages", newConversation.getMessages());
-        }
-        else {
-            model.addAttribute("conversation", conversation);
-            model.addAttribute("tableMessages", conversation.getMessages());
         }
 
         model.addAttribute("buyer", buyer);
@@ -121,6 +122,7 @@ public class ConversationController {
         }
         message.setUser(user);
         message.setConversation(conversation);
+        message.setDate(LocalDateTime.now());
         conversationService.addMessage(message);
         return "redirect:/conversation/resume/" + id;
     }
@@ -143,10 +145,8 @@ public class ConversationController {
         String email = principal.getName();
         User user = usersService.getUserByEmail(email);
         List<Long> conversations = conversationService.searchConversationsTakingPartBy(user);
-
-        if(conversations.contains(id)){
+        if (conversations.contains(id))
             conversationService.deleteConversation(id);
-        }
         return "redirect:/conversation/list";
     }
 
