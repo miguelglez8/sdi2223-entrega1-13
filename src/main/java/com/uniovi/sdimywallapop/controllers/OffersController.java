@@ -131,7 +131,6 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
-        model.addAttribute("user", user);
         return "redirect:/offer/myList";
     }
 

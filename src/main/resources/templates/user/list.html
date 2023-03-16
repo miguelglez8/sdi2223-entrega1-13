@@ -37,7 +37,8 @@
             </tbody>
         </table>
     </div>
-    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar los usuarios seleccionados?')">Eliminar usuarios seleccionados</button>
+    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar los usuarios seleccionados?')"
+            th:text="#{user.list.btn.del}"></button>
 </form>
 <footer th:replace="fragments/footer"/>
 </body>

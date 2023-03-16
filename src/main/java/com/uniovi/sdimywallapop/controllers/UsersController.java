@@ -1,7 +1,9 @@
 package com.uniovi.sdimywallapop.controllers;
 
+import com.uniovi.sdimywallapop.entities.Log;
 import com.uniovi.sdimywallapop.entities.User;
 
+import com.uniovi.sdimywallapop.services.LogServices;
 import com.uniovi.sdimywallapop.services.RolesService;
 import com.uniovi.sdimywallapop.services.SecurityService;
 import com.uniovi.sdimywallapop.services.UsersService;
@@ -17,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -27,6 +30,8 @@ public class UsersController {
     private SignUpFormValidator signUpFormValidator;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private LogServices logServices;
 
     @Autowired
     private SecurityService securityService;
@@ -102,10 +107,13 @@ public class UsersController {
         signUpFormValidator.validate(user, result);
         if (result.hasErrors()) {
             return "signup";
+        } else {
+            logServices.addLog(new Log("ALTA", new Date(), "Mapeo: signup /signup"));
         }
         user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
         securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
+        logServices.addLog(new Log("LOGIN-EX", new Date(), user.getEmail()));
         return "redirect:home";
     }
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -120,11 +128,11 @@ public class UsersController {
                 .getAuthentication();
         String email = auth.getName();
         User activeUser = usersService.getUserByEmail(email);
-            if (activeUser.getRole().equals("ROLE_ADMIN")) {
-                return "redirect:user/list";
-            }else{
-                return "redirect:offer/myList";
-            }
+        if (activeUser.getRole().equals("ROLE_ADMIN")) {
+            return "redirect:user/list";
+        } else {
+            return "redirect:offer/myList";
+        }
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
