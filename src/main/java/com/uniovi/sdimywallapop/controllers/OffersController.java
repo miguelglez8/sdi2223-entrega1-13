@@ -116,7 +116,10 @@ public class OffersController {
         }
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user);
-        return "redirect:/offer/list?page=" + page + "&searchText=" + searchText;
+        if (searchText != null) {
+            return "redirect:/offer/list?page=" + page + "&searchText=" + searchText;
+        }
+        return "redirect:/offer/list?page=" + page;
     }
 
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
