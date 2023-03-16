@@ -29,6 +29,7 @@ public class LogController {
         return "log/list :: tableLogs";
     }
 
+    //Tipos definidos en el enunciado
     @RequestMapping("/log/list/tipe/{tipo}")
     public String petList(Model model, @PathVariable String tipo){
         model.addAttribute("logList", logServices.getPetLogs(tipo));
