@@ -32,7 +32,7 @@ public class User {
         this.email = email;
     }
     
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private Set<Conversation> conversations;
 
     public User(String name, String lastName, String email) {
@@ -91,7 +91,7 @@ public class User {
     public Set<Offer> getOffers() {
         return offers;
     }
-    public void setOffers(Set user1Offers) {
+    public void setOffers(Set<Offer> user1Offers) {
         this.offers = user1Offers;
     }
 
@@ -111,4 +111,7 @@ public class User {
         this.money -= price;
     }
 
+    public void updateMoney() {
+        this.setMoney(100.0);
+    }
 }

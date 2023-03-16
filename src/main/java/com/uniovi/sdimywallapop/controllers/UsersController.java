@@ -9,7 +9,6 @@ import com.uniovi.sdimywallapop.services.SecurityService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.SignUpFormValidator;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,11 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.context.IContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -41,13 +37,18 @@ public class UsersController {
     private SecurityService securityService;
 
     @RequestMapping("/user/list")
-    public String getListado(Model model) {
+    public String getListado(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("usersList", usersService.getUsers());
         return "user/list";
     }
-
     @RequestMapping(value = "/user/add")
-    public String getUser(Model model) {
+    public String getUser(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("rolesList", rolesService.getRoles());
         return "user/add";
     }
@@ -57,7 +58,6 @@ public class UsersController {
         usersService.addUser(user);
         return "redirect:/user/list";
     }
-
     @RequestMapping("/user/details/{id}")
     public String getDetail(Model model, @PathVariable Long id) {
         model.addAttribute("user", usersService.getUser(id));
@@ -77,14 +77,12 @@ public class UsersController {
 
         return "redirect:/user/list";
     }
-
     @RequestMapping(value = "/user/edit/{id}")
     public String getEdit(Model model, @PathVariable Long id) {
         User user = usersService.getUser(id);
         model.addAttribute("user", user);
         return "user/edit";
     }
-
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         User originalUser = usersService.getUser(user.getId());
@@ -97,11 +95,13 @@ public class UsersController {
     }
 
     @RequestMapping("/user/list/update")
-    public String updateList(Model model) {
-        model.addAttribute("usersList", usersService.getUsers());
+    public String updateList(Model model, Principal principal){
+        model.addAttribute("usersList", usersService.getUsers() );
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         return "user/list :: tableUsers";
     }
-
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@Validated User user, BindingResult result) {
         signUpFormValidator.validate(user, result);
@@ -116,14 +116,14 @@ public class UsersController {
         logServices.addLog(new Log("LOGIN-EX", new Date(), user.getEmail()));
         return "redirect:home";
     }
-
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
 
-    @RequestMapping(value = {"/home"}, method = RequestMethod.GET)
-    public String home(Model model) {
+    @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+    public String home() {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();
         String email = auth.getName();
