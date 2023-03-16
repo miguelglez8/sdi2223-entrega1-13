@@ -21,7 +21,7 @@ public class Message {
     @ManyToOne
     private Conversation conversation;
 
-    public Message() { }
+    public Message() { this.date = LocalDateTime.now(); }
 
     public Message(String text, User user, Conversation conversation, LocalDateTime date) {
         this.text = text;

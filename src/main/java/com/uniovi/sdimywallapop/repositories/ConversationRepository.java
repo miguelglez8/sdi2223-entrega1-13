@@ -13,7 +13,6 @@ import java.util.List;
 public interface ConversationRepository extends CrudRepository<Conversation, Long> {
 
     List<Conversation> findAllBySeller(User user);
-    List<Conversation> findAll();
     Page<Conversation> findAll(Pageable pageable);
 
     @Query("Select c from Conversation c where c.buyer.email LIKE ?1 and c.offer.id = ?2")

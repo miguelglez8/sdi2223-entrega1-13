@@ -20,7 +20,9 @@
             </tr>
         </table>
     </div>
-    <form class="form-horizontal" method="post" th:action="${'/conversation/resume/' + conversation.id}" th:object="${message}">
+    <form class="form-horizontal" method="post"
+          th:action="${formState == 0 ? '/conversation/start/' + offer.id : '/conversation/resume/' + conversation.id}"
+          th:object="${message}">
         <div style="display:flex; justify-content: center;">
             <label class="control-label col-sm-2" for="text" th:text="#{conversation.sendMessage}"></label>
             <input type="text" class="form-control" id="text" name="text"
