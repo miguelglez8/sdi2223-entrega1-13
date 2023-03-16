@@ -51,13 +51,13 @@ public class PO_NavView extends PO_View{
     }
 
     public static void checkIsAdmin(WebDriver driver) {
-        List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver,
+        List<WebElement> elementos = SeleniumUtils.waitLoadElementsBy(driver,
                 "id", "admin", getTimeout());
         assertTrue(elementos.size() == 1);
     }
 
     public static void checkIsUser(WebDriver driver) {
-        List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver,
+        List<WebElement> elementos = SeleniumUtils.waitLoadElementsBy(driver,
                 "id", "users", getTimeout());
         assertTrue(elementos.size() == 2);
     }

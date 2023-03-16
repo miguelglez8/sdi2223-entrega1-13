@@ -5,9 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Component
 public class SignUpFormValidator implements Validator {
     @Autowired

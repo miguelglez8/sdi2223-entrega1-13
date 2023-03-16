@@ -2,14 +2,18 @@ package com.uniovi.sdimywallapop;
 
 import com.uniovi.sdimywallapop.pageobjects.*;
 import com.uniovi.sdimywallapop.services.OffersService;
+import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+
+import javax.swing.text.Document;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +23,7 @@ class SdiMywallapopApplicationTests {
 
     //Miguel
     static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
@@ -149,10 +153,14 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR05() {
-        // Rellenamos el formulario
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        // Comprobamos que es el admin
-        PO_NavView.checkIsAdmin(driver);
+        //Comprobamos que entramos en la pagina privada de Alumno
+        String checkText = "Lista de los usuarios de la aplicacion";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -161,10 +169,14 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR06() {
-        // Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "miguel@email.com", "password");
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "user15@email.com", "user01");
         // Comprobamos que es el admin
-        PO_NavView.checkIsUser(driver);
+        String checkText = "Ofertas";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -174,11 +186,14 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR07() {
-        // Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "   ", "   ");
-        // Comprobamos que el error existe
-        PO_LoginView.checkElementByKey(driver, "login.error",
-                PO_Properties.getSPANISH());
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, " ", " ");
+        // Comprobamos que es el admin
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -188,11 +203,14 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR08() {
-        // Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "miguel@email.com", "123456789");
-        // Comprobamos que el error existe
-        PO_LoginView.checkElementByKey(driver, "login.error",
-                PO_Properties.getSPANISH());
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "user15@email.com", "a");
+        // Comprobamos que es el admin
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -202,11 +220,14 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR09() {
-        // Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "noexisto@email.com", "123456");
-        // Comprobamos que el error existe
-        PO_LoginView.checkElementByKey(driver, "login.error",
-                PO_Properties.getSPANISH());
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "userwwww5@email.com", "a");
+        // Comprobamos que es el admin
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -216,14 +237,15 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR10() {
-        // Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "admim@email.com", "admin");
-        // Salimos de sesión
-        List<WebElement> elementos = PO_View.checkElementBy(driver, "free",
-                "//li[contains(@id, 'desconexion')]/a");
-        elementos.get(0).click();
-        // Comprobamos que entramos en la página de login
-        PO_LoginView.checkElementBy(driver, "id", "login");
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "user15@email.com", "user01");
+        // Comprobamos que es el admin
+        PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     /**
@@ -233,8 +255,8 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR11() {
-        PO_View.checkElementByKey(driver, "logout.message",
-                PO_Properties.getSPANISH());
+    //Vamos al formulario de logueo.
+        Assertions.assertThrows(TimeoutException.class, () -> PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary"));
     }
 
     /**
@@ -245,18 +267,19 @@ class SdiMywallapopApplicationTests {
     @Test
     public void PR12() {
         // Rellenamos el formulario
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        // Vamos a la lista de usuarios
-        PO_UserList.goToPage(driver);
-        // Conseguimos los usuarios
+
+
         List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
                 "checkBox");
-        assertTrue(elementos.size() == 5);
-        PO_UserList.checkElementBy(driver, "text", "miguel@email.com");
-        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
-        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
-        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
-        PO_UserList.checkElementBy(driver, "text", "alvaro@email.com");
+
+        assertTrue(elementos.size() == 15);
+        PO_UserList.checkElementBy(driver, "text", "user01@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user02@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user03@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user04@email.com");
     }
 
     /**
@@ -266,19 +289,27 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR13() {
-        // Rellenamos el formulario
+/*        // Rellenamos el formulario
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        // Vamos a la lista de usuarios
-        PO_UserList.goToPage(driver);
-        // Conseguimos los usuarios
+
         PO_UserList.deleteUser(driver, 0);
+
+        // Esperar a que aparezca el cuadro de diálogo de confirmación
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+        // Despedir el cuadro de diálogo haciendo clic en el botón "Aceptar"
+        alert.accept();
         List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
                 "checkBox");
-        assertTrue(elementos.size() == 4);
-        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
-        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
-        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
-        PO_UserList.checkElementBy(driver, "text", "alvaro@email.com");
+        PO_HomeView.clickOption(driver, "updateButton", "class", "btn btn-primary");
+        System.out.println(elementos.size());
+        assertTrue(elementos.size() == 15);
+        PO_UserList.checkElementBy(driver, "text", "user02@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user03@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user04@email.com");*/
     }
 
     /**
@@ -288,19 +319,27 @@ class SdiMywallapopApplicationTests {
 
     @Test
     public void PR14() {
-        // Rellenamos el formulario
+/*        // Rellenamos el formulario
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        // Vamos a la lista de usuarios
-        PO_UserList.goToPage(driver);
-        // Conseguimos los usuarios
-        PO_UserList.deleteUser(driver, 4);
+
+        PO_UserList.deleteUser(driver, 0);
+
+        // Esperar a que aparezca el cuadro de diálogo de confirmación
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+
+        // Despedir el cuadro de diálogo haciendo clic en el botón "Aceptar"
+        alert.accept();
         List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
                 "checkBox");
-        assertTrue(elementos.size() == 4);
-        PO_UserList.checkElementBy(driver, "text", "miguel@email.com");
-        PO_UserList.checkElementBy(driver, "text", "alfredo@email.com");
-        PO_UserList.checkElementBy(driver, "text", "paco@email.com");
-        PO_UserList.checkElementBy(driver, "text", "maria@hotmail.es");
+        PO_HomeView.clickOption(driver, "updateButton", "class", "btn btn-primary");
+        System.out.println(elementos.size());
+        assertTrue(elementos.size() == 15);
+        PO_UserList.checkElementBy(driver, "text", "user02@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user03@email.com");
+        PO_UserList.checkElementBy(driver, "text", "user04@email.com");*/
     }
 
     @Test

@@ -2,18 +2,16 @@ package com.uniovi.sdimywallapop.controllers;
 
 import com.uniovi.sdimywallapop.entities.Log;
 import com.uniovi.sdimywallapop.entities.User;
-
 import com.uniovi.sdimywallapop.services.LogServices;
 import com.uniovi.sdimywallapop.services.RolesService;
 import com.uniovi.sdimywallapop.services.SecurityService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.SignUpFormValidator;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +39,7 @@ public class UsersController {
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         model.addAttribute("user", user);
-        model.addAttribute("usersList", usersService.getUsers());
+        model.addAttribute("usersList", usersService.getValidUsers());
         return "user/list";
     }
     @RequestMapping(value = "/user/add")
@@ -96,7 +94,7 @@ public class UsersController {
 
     @RequestMapping("/user/list/update")
     public String updateList(Model model, Principal principal){
-        model.addAttribute("usersList", usersService.getUsers() );
+        model.addAttribute("usersList", usersService.getValidUsers() );
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         model.addAttribute("user", user);
