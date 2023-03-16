@@ -46,7 +46,8 @@
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td>
                     <div th:if="${offer.isSold()==false}">
-                        <a th:href="${'/offer/buy?id='+ offer.id + '&page=' + (page != null ? page.getNumber() : '0')}"
+                        <a th:href="${'/offer/buy?id='+ offer.id + '&page=' + (page != null ? page.getNumber() : '0') +
+                        '&searchText=' + (searchText != null ? searchText : '')}"
                            th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">
