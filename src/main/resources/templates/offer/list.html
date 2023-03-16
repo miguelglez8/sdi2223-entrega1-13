@@ -47,7 +47,7 @@
                 <td>
                     <div th:if="${offer.isSold()==false}">
                         <a th:href="${'/offer/buy?id='+ offer.id + '&page=' + (page != null ? page.getNumber() : '0') +
-                        '&searchText=' + (searchText != null ? searchText : '')}"
+                         (searchText != null ? '&searchText=' + searchText : '')}"
                            th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">

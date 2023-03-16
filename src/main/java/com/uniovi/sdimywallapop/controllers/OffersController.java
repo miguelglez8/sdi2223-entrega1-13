@@ -68,7 +68,6 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("offerList", offers.getContent());
-        model.addAttribute("user", user);
         return "offer/list :: tableOffers";
     }
 

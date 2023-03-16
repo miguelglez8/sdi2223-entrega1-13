@@ -19,16 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SdiMywallapopApplicationTests {
 
     //Miguel
-    //static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    //static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
      //static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
     //Alves
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    //static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    //static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
