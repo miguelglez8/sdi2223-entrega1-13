@@ -2,7 +2,6 @@ package com.uniovi.sdimywallapop;
 
 import com.uniovi.sdimywallapop.pageobjects.*;
 import com.uniovi.sdimywallapop.services.OffersService;
-import com.uniovi.sdimywallapop.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -10,7 +9,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import javax.swing.text.Document;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -20,7 +20,7 @@ class SdiMywallapopApplicationTests {
 
     //Miguel
     static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\migue\\Desktop\\SDI\\LABORATORIO\\sesion06\\PL-SDI-Sesión5-material\\PL-SDI-Sesio╠ün5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\luism\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
@@ -66,7 +66,6 @@ class SdiMywallapopApplicationTests {
     /**
      * PR01. Registro de Usuario con datos válidos
      */
-
     @Test
     public void PR01() {
         // Vamos al formulario de registro
@@ -712,6 +711,161 @@ class SdiMywallapopApplicationTests {
         PO_PrivateView.changeLanguage(driver, "Spanish");
         // logout
         PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    /**
+     * [Prueba30] Intentar acceder sin estar autenticado a la opción de listado de usuarios. Se deberá volver al
+     * formulario de login.
+     */
+    @Test
+    @Order(30)
+    public void PR30() {
+        //Intento acceder a la lista de usuarios
+        driver.get("http://localhost:8090/user/list");
+        //Compruebo que no me lo ha permitido y me envía al login
+        Assertions.assertEquals("http://localhost:8090/login", driver.getCurrentUrl());
+    }
+
+    /**
+     * [Prueba31] Intentar acceder sin estar autenticado a la opción de listado de conversaciones
+     * de un usuario estándar. Se deberá volver al formulario de login.
+     */
+    @Test
+    @Order(31)
+    public void PR31() {
+        //Intento acceder a la lista de usuarios
+        driver.get("http://localhost:8090/conversation/list");
+        //Compruebo que no me lo ha permitido y me envía al login
+        Assertions.assertEquals("http://localhost:8090/login", driver.getCurrentUrl());
+    }
+
+    /**
+     * [Prueba32] Estando autenticado como usuario estándar intentar acceder a una opción disponible solo
+     * para usuarios administradores (Añadir menú de auditoria (visualizar logs)). Se deberá indicar un mensaje
+     * de acción prohibida.
+     */
+    @Test
+    @Order(32)
+    public void PR32() {
+        //Vamos al formulario de logueo.
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario.
+        PO_LoginView.fillLoginForm(driver, "user15@email.com", "user01");
+        //Intentamos acceder al log, opción disponible solo para administradores.
+        driver.get("http://localhost:8090/log/list");
+        //Comprobamos que está accediendo a la vista con el mensaje que indica que no está autorizado
+        Assertions.assertEquals("http://localhost:8090/unauthorized", driver.getCurrentUrl());
+    }
+
+    /**
+     * [Prueba33] Estando autenticado como usuario administrador visualizar todos los logs generados en una
+     * serie de interacciones. Esta prueba deberá generar al menos dos interacciones de cada tipo y comprobar
+     * que el listado incluye los logs correspondientes.
+     */
+    @Test
+    @Order(33)
+    public void PR33() {
+        //Iniciamos sesión como administrador para reiniciar la lista de logs, por lo que este login no contará
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario.
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        driver.get("http://localhost:8090/log/list");
+        //Reiniciamos la lista
+        driver.findElements(By.tagName("button")).get(driver.findElements(By.tagName("button")).size()-1).click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.accept();
+        // logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+        // Vamos al formulario de registro
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test_1", "test_1", "test1@email.com",
+                "123456", "123456");
+        // logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+        // Vamos al formulario de registro por segunda vez
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        // Rellenamos el formulario.
+        PO_SignUpView.fillForm(driver, "test_2", "test_2", "test2@email.com",
+                "123456", "123456");
+        // logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+        //Intentamos iniciar sesión erroneamente
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Credenciales con nombre erroneo
+        PO_LoginView.fillLoginForm(driver, "adsasd", "admin");
+        //Credenciales con contraseña erronea
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "asd");
+        //Iniciamos sesión como administrador veces
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario.
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        driver.get("http://localhost:8090/log/list");
+        WebElement element = driver.findElement(By.tagName("body"));
+        String pageContent = element.getText();
+        String loginEx = "LOGIN-EX";
+        String loginErr= "LOGIN-ERR";
+        String alta = "ALTA";
+        String pet = "PET";
+        String logout = "LOGOUT";
+        int occurrences = pageContent.split(loginEx, -1).length - 1;
+        // 4 login exitosos debido a que al registrarse también se tiene en cuenta como un login
+        Assertions.assertEquals(occurrences, 3);
+        // 2 login erroneos provocados
+        occurrences = pageContent.split(loginErr, -1).length - 1;
+        Assertions.assertEquals(occurrences, 2);
+        // 3 logout, dos por las nuevas cuentas creadas y otro por el login.
+        occurrences = pageContent.split(logout, -1).length - 1;
+        Assertions.assertEquals(occurrences, 3);
+        // 2 altas
+        occurrences = pageContent.split(alta, -1).length - 1;
+        Assertions.assertEquals(occurrences, 2);
+        // Más de dos peticiones, cada acción proboca peticiones.
+        occurrences = pageContent.split(pet, -1).length - 1;
+        Assertions.assertTrue(occurrences > 2);
+    }
+
+    /**
+     * [Prueba34] Estando autenticado como usuario administrador, ir a visualización de logs, pulsar el
+     * botón/enlace borrar logs y comprobar que se eliminan los logs de la base de datos.
+     */
+    @Test
+    @Order(34)
+    public void PR34() {
+        //Iniciamos sesión como administrador
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        //Rellenamos el formulario.
+        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
+        driver.get("http://localhost:8090/log/list");
+        driver.findElements(By.tagName("button")).get(driver.findElements(By.tagName("button")).size()-1).click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+        alert.accept();
+        driver.get("http://localhost:8090/log/list");
+        WebElement element = driver.findElement(By.tagName("body"));
+        String pageContent = element.getText();
+        //Solo aparecerá una petición PET, la que se produce al recargar la lista después de eliminarla
+        String loginEx = "LOGIN-EX";
+        String loginErr= "LOGIN-ERR";
+        String alta = "ALTA";
+        String pet = "PET";
+        String logout = "LOGOUT";
+        int occurrences = pageContent.split(loginEx, -1).length - 1;
+        // 4 login exitosos debido a que al registrarse también se tiene en cuenta como un login
+        Assertions.assertEquals(occurrences, 0);
+        // 2 login erroneos provocados
+        occurrences = pageContent.split(loginErr, -1).length - 1;
+        Assertions.assertEquals(occurrences, 0);
+        // 3 logout, dos por las nuevas cuentas creadas y otro por el login.
+        occurrences = pageContent.split(logout, -1).length - 1;
+        Assertions.assertEquals(occurrences, 0);
+        // 2 altas
+        occurrences = pageContent.split(alta, -1).length - 1;
+        Assertions.assertEquals(occurrences, 0);
+        // Más de dos peticiones, cada acción proboca peticiones.
+        occurrences = pageContent.split(pet, -1).length - 1;
+        Assertions.assertTrue(occurrences >= 1);
     }
 
     @Test

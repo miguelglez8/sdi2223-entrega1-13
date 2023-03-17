@@ -29,6 +29,11 @@ public class LogController {
         return "log/list :: tableLogs";
     }
 
+    @RequestMapping("/unauthorized")
+    public String unauthorizedList(){
+        return "unauthorized";
+    }
+
     //Tipos definidos en el enunciado
     @RequestMapping("/log/list/tipe/{tipo}")
     public String petList(Model model, @PathVariable String tipo){

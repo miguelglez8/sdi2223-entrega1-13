@@ -25,6 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
+    @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
     @Bean
     @Override
@@ -45,11 +47,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/offer/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler("Error","/unauthorized"))
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
                 .defaultSuccessUrl("/home")
                 .successHandler(authenticationSuccessHandler)
+                .failureHandler(customAuthenticationFailureHandler)
                 .and()
                 .logout()
                 .logoutSuccessHandler(logoutSuccessHandler)
