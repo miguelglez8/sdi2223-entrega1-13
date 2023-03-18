@@ -167,6 +167,10 @@ public class OffersController {
         String email = principal.getName();
         User user = usersService.getUserByEmail(email);
         List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
+        List<String> errors = offersService.validateOfferToDelete(offersService.getOffer(id), user);
+        if (errors.size() > 0) {
+            return "redirect:/offer/myList";
+        }
 
         if(offers.contains(id)){
             offersService.deleteOffer(id);

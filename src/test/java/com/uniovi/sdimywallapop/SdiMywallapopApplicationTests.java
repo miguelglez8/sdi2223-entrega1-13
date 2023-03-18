@@ -23,12 +23,12 @@ class SdiMywallapopApplicationTests {
     // static String Geckodriver = "C:\\Users\\luism\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
-     //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-     //static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
+     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+     static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
     //Alves
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+//    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+//    static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -340,6 +340,10 @@ class SdiMywallapopApplicationTests {
         PO_UserList.checkElementBy(driver, "text", "user04@email.com");*/
     }
 
+    /**
+     * PR15. Ir al formulario de alta de oferta, rellenarla con datos válidos y pulsar el botón Enviar.
+     * Comprobar que la oferta sale en el listado de ofertas de dicho usuario
+     */
     @Test
     @Order(15)
     public void PR15() {
@@ -352,6 +356,10 @@ class SdiMywallapopApplicationTests {
         Assertions.assertEquals(checkText, elements.get(0).getText());
     }
 
+    /**
+     * PR16. Ir al formulario de alta de oferta, rellenarla con datos inválidos (precio negativo) y pulsar el
+     * botón Enviar. Comprobar que se muestra el mensaje de campo inválido.
+     */
     @Test
     @Order(16)
     public void PR16() {
@@ -363,6 +371,10 @@ class SdiMywallapopApplicationTests {
         Assertions.assertEquals(checkText, elements.get(0).getText());
     }
 
+    /**
+     * PR17. Mostrar el listado de ofertas para dicho usuario y comprobar que se muestran todas los que
+     * existen para este usuario.
+     */
     @Test
     @Order(17)
     public void PR17() {
@@ -372,6 +384,10 @@ class SdiMywallapopApplicationTests {
         Assertions.assertEquals(5, elements.size());
     }
 
+    /**
+     * PR18. Ir a la lista de ofertas, borrar la primera oferta de la lista, comprobar que la lista se actualiza y
+     * que la oferta desaparece.
+     */
     @Test
     @Order(18)
     public void PR18() {
@@ -383,6 +399,10 @@ class SdiMywallapopApplicationTests {
         Assertions.assertEquals(10, elements.size());
     }
 
+    /**
+     * PR19. Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y
+     * que la oferta desaparece.
+     */
     @Test
     @Order(19)
     public void PR19() {
