@@ -4,6 +4,7 @@ import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.OffersRepository;
 import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
+import com.uniovi.sdimywallapop.validators.OfferDeleteValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OffersService {
@@ -84,4 +84,7 @@ public class OffersService {
         offersRepository.save(offer);
     }
 
+    public List<String> validateOfferToDelete(Offer offer, User user) {
+        return new OfferDeleteValidator().validate(offer, user);
+    }
 }
