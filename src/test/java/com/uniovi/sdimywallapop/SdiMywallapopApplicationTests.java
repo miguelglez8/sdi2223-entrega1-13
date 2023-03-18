@@ -19,16 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SdiMywallapopApplicationTests {
 
     //Miguel
-    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    static String Geckodriver = "C:\\Users\\luism\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    // static String Geckodriver = "C:\\Users\\luism\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     //Ton
      //static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
      //static String Geckodriver = "C:\\Users\\tonpm\\OneDrive\\Documentos\\MisDocumentos\\Clase\\2022\\SDI\\geckodriver-v0.30.0-win64.exe";
 
     //Alves
-    //static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
-    //static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
+    static String Geckodriver = "C:\\Users\\Alves\\Desktop\\selenium-test\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
    // static String PathFirefox = "C:\\Archivos de programa\\Mozilla Firefox\\firefox.exe";
    // static String Geckodriver = "C:\\Users\\Aladino España\\Desktop\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -868,16 +868,65 @@ class SdiMywallapopApplicationTests {
         Assertions.assertTrue(occurrences >= 1);
     }
 
+    /**
+     * PR35. Sobre el listado de conversaciones ya abiertas, pinchar el enlace Eliminar de la primera.
+     * Comprobar que el listado se actualiza correctamente.
+     */
     @Test
     @Order(35)
     public void PR35() {
-
+        // Login
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
+        // Enviamos un mensaje a la oferta 6
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Hola, esto es un mensaje a la oferta 6");
+        // Enviamos un mensaje a la oferta 23
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 23", "Hola, esto es un mensaje a la oferta 23");
+        // Enviamos un mensaje a la oferta 48
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 48", "Hola, esto es un mensaje a la oferta 48");
+        // Vamos al listado de conversaciones
+        driver.get("http://localhost:8090/conversation/list");
+        // Eliminamos el primer elemento de la tabla
+        driver.findElement(By.xpath("//*[@id=\"tableConversations\"]/tbody/tr[1]/td[4]/a")).click();
+        // Comprobamos que hay solo dos filas
+        List<WebElement> rows = driver.findElements(By.className("conversation-list-rows"));
+        Assertions.assertEquals(2, rows.size());
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
     }
 
+    /**
+     * PR35. Sobre el listado de conversaciones ya abiertas, pinchar el enlace Eliminar de la última.
+     * Comprobar que el listado se actualiza correctamente.
+     */
     @Test
     @Order(36)
     public void PR36() {
-
+        // Login
+        PO_PrivateView.refactorLogging(driver, "user04@email.com", "user01");
+        // Enviamos un mensaje a la oferta 6
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 6", "Hola, esto es un mensaje a la oferta 6");
+        // Enviamos un mensaje a la oferta 23
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 23", "Hola, esto es un mensaje a la oferta 23");
+        // Enviamos un mensaje a la oferta 48
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 48", "Hola, esto es un mensaje a la oferta 48");
+        // Enviamos un mensaje a la oferta 67
+        driver.get("http://localhost:8090/offer/list?size=200");
+        PO_ConversationView.sendMessage(driver, "Oferta 67", "Hola, esto es un mensaje a la oferta 67");
+        // Vamos al listado de conversaciones
+        driver.get("http://localhost:8090/conversation/list");
+        // Eliminamos el último elemento de la tabla
+        driver.findElement(By.xpath("//*[@id=\"tableConversations\"]/tbody/tr[4]/td[4]/a")).click();
+        // Comprobamos que hay solo dos filas
+        List<WebElement> rows = driver.findElements(By.className("conversation-list-rows"));
+        Assertions.assertEquals(3, rows.size());
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
     }
 
 }
