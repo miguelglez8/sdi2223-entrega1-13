@@ -13,7 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -125,6 +128,14 @@ public class OffersController {
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
     public String setOffer(Principal principal, Model model, @Validated Offer offer, BindingResult result) {
         offerFormValidator.validate(offer, result);
+        if (offer.isDestacado()){
+            User user = usersService.getUserByEmail(principal.getName());
+            if(user.getMoney()<20){
+                result.rejectValue("destacado", "Error.offer.destacado.money");
+            } else {
+                usersService.decrementMoney(user, 20);
+            }
+        }
         if (result.hasErrors()) {
             model.addAttribute("offerList", offersService.getOffers());
             return "offer/add";
@@ -134,6 +145,20 @@ public class OffersController {
         User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
+        return "redirect:/offer/myList";
+    }
+
+    @RequestMapping("/offer/toHighlight/{id}")
+    public String toHighlightOffer(@PathVariable Long id,  Principal principal){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
+        Offer offer = offersService.searchById(id);
+        if(offers.contains(id) && user.getMoney() >= 20 && !offer.isDestacado()){
+            usersService.decrementMoney(user, 20);
+            offersService.toHighlightOffer(offer);
+        }
+
         return "redirect:/offer/myList";
     }
 

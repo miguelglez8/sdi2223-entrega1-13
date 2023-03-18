@@ -10,7 +10,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface OffersRepository extends CrudRepository<Offer, Long> {
-    Page<Offer> findAllByUser(Pageable pageable, User user);
+    @Query("SELECT o FROM Offer o WHERE o.destacado = true or o.user.id = ?1 order by o.destacado DESC")
+    Page<Offer> findAllHighlightOfferByUser(Pageable pageable, Long id);
 
     Page<Offer> findAll(Pageable pageable);
 
@@ -21,4 +22,5 @@ public interface OffersRepository extends CrudRepository<Offer, Long> {
 
     @Query("Select r.id FROM Offer r WHERE r.user.id = ?1")
     List<Long> findAllByUserID(Long id);
+
 }

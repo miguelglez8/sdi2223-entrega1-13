@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OffersService {
@@ -45,7 +46,7 @@ public class OffersService {
 
     public Page<Offer> getOffersForUser(Pageable pageable, User user) {
         Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
-        offers = offersRepository.findAllByUser(pageable, user);
+        offers = offersRepository.findAllHighlightOfferByUser(pageable, user.getId());
         return offers;
     }
 
@@ -77,4 +78,10 @@ public class OffersService {
     public List<Long> getOffersIdsByUserId(Long id){
         return offersRepository.findAllByUserID(id);
     }
+
+    public void toHighlightOffer(Offer offer){
+        offer.setDestacado(true);
+        offersRepository.save(offer);
+    }
+
 }

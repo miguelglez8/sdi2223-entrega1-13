@@ -23,6 +23,7 @@
                 <td th:text="${offer.details}"></td>
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
                 <td><a th:href="${'/offer/delete/' + offer.id}" th:text="#{offer.list.delete}"></a>
+                <td><a th:href="${'/offer/toHighlight/' + offer.id}" th:text="#{offer.list.toHighlight}"></a>
         </table>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>

@@ -42,6 +42,14 @@
                 </div>
             </div>
             <div class="form-group">
+                <label class="control-label col-sm-2" for="title" th:text="#{offer.add.form.destacado}"></label>
+                <div class="col-sm-10">
+                    <input type="checkbox" id="destacado" name="destacado">
+                    <span class="text-danger" th:if="${#fields.hasErrors('destacado')}"
+                          th:errors="*{destacado}"></span>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-primary" th:text="#{offer.add.form.send}"></button>
                 </div>
