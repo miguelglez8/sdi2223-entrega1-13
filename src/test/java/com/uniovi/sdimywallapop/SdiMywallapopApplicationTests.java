@@ -1003,7 +1003,7 @@ class SdiMywallapopApplicationTests {
      * comprobar que la lista se actualiza y dicho usuario desaparece.
      */
     @Test
-    @Order(41)
+    @Order(40)
     public void PR40() {
         // Rellenamos el formulario
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");

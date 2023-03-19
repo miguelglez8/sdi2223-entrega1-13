@@ -155,6 +155,7 @@ public class OffersController {
         Page<Offer> offers = offersService.getOffersByUserId(user, pageable);
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
+        model.addAttribute("user", user);
         List<String> errors = offersService.validateOfferHighlight(offer, user);
         model.addAttribute("errorsH", errors);
         if(errors.size() > 0){
