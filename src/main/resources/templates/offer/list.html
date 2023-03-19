@@ -31,6 +31,7 @@
         <table class="table table-hover" th:fragment="tableOffers" id="tableOffers">
             <thead>
             <tr>
+                <th scope="col" th:text="#{offer.list.data.image}"></th>
                 <th scope="col" th:text="#{offer.list.data.title}"></th>
                 <th scope="col" th:text="#{offer.list.data.description}"></th>
                 <th scope="col" th:text="#{offer.list.data.details}"></th>
@@ -40,6 +41,12 @@
             </thead>
             <tbody>
             <tr class="filas-list-offers" th:each="offer : ${offerList}">
+                <td>
+                    <img th:if="${offer.image != null and offer.image != ''}" th:src="${offer.image}"
+                         width="56" height="56" style="object-fit: cover;">
+                    <img th:unless="${offer.image != null and offer.image != ''}" src="/images/example.png"
+                         width="56" height="56"/>
+                </td>
                 <td th:text="${offer.title}"></td>
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>

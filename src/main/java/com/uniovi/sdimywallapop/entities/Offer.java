@@ -19,6 +19,7 @@ public class Offer {
     private Long comprador;
     private String emailComprador;
     private boolean destacado;
+    private String image;
 
     public boolean isSold() {
         return isSold;
@@ -59,6 +60,11 @@ public class Offer {
         this.isSold = false;
         this.user = user;
         this.destacado = destacado;
+        this.image = "";
+    }
+    public Offer(String title, String description, String details, double price, User user, Boolean destacado, String image){
+        this(title, description,details,price,user,destacado);
+        this.image = image;
     }
 
     public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
@@ -156,5 +162,13 @@ public class Offer {
 
     public void setDestacado(boolean destacado) {
         this.destacado = destacado;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

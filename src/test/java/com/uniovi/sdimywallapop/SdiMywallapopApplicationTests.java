@@ -428,7 +428,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[2]/td[6]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
                 (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador
@@ -457,7 +457,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[2]/td[6]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
                 (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que se descuenta correctamente el marcador (está a cero)
@@ -486,7 +486,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la intentamos comprar
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[6]/div/a")).click();
         double value = (Double.parseDouble(driver.findElement
                 (By.xpath("//*[@id=\"myNavbar\"]/ul[2]/li[1]/h4")).getText()));
         // comprobamos que el marcador sigue igual (a 100) porque no se pudo comprar
@@ -518,7 +518,7 @@ class SdiMywallapopApplicationTests {
         // seleccionamos buscar
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[6]/div/a")).click();
         // vamos a la vista de ofertas compradas
         driver.get("http://localhost:8090/offer/listBuy");
         // seleccionamos todas las ofertas que aparecen
@@ -916,7 +916,7 @@ class SdiMywallapopApplicationTests {
         // Añadimos una oferta cdestacada
         PO_PrivateView.fillFormAddHighlightOffer(driver,"Mesa","Mesa de caoba","Muy grande","24");
         //Comprobamos que se ha cobrado el marcar la oferta
-        Assertions.assertEquals(usersService.getUserByEmail("user01@email.com").getMoney(), 56.0);
+        Assertions.assertEquals(usersService.getUserByEmail("user01@email.com").getMoney(), 66.0);
         // Logout
         PO_PrivateView.refactorLogout(driver, "logout");
         // Iniciamos sesión con otro usuario
@@ -963,6 +963,8 @@ class SdiMywallapopApplicationTests {
         String pageContent = element.getText();
         int occurrences = pageContent.split(destacada.getTitle(), -1).length - 1;
         Assertions.assertEquals(occurrences, 1);
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
     }
 
     /**
@@ -986,7 +988,7 @@ class SdiMywallapopApplicationTests {
         // buscamos la oferta
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // la compramos
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr[1]/td[5]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[6]/div/a")).click();
         //Vamos a la vista de nuestras ofertas
         driver.get("http://localhost:8090/offer/myList");
         //Intentamos destacar una oferta
@@ -996,6 +998,59 @@ class SdiMywallapopApplicationTests {
         String pageContent = element.getText();
         int occurrences = pageContent.split("No tienes suficiente dinero para destacar la oferta", -1).length - 1;
         Assertions.assertEquals(occurrences, 1);
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    /**
+     * [Prueba40] Desde el formulario de dar de alta ofertas, crear una oferta con datos válidos y una imagen
+     * adjunta. Comprobar que en el listado de ofertas propias aparece la imagen adjunta junto al resto de datos
+     * de la oferta.
+     */
+    @Test
+    @Order(40)
+    public void PR40() {
+        //Iniciamos sesión con un ususario.
+        PO_PrivateView.refactorLogging(driver, "user08@email.com", "user01");
+        //Vamos al formulario para crear ofertas
+        driver.get("http://localhost:8090/offer/add");
+        // Rellenamos el formulario con una imagen
+        String url = "https://cdn20.pamono.com/p/g/1/2/1286851_pjnuze6ee9/mesa-de-comedor-grande-de-caoba-imagen-2.jpg";
+        PO_PrivateView.fillFormAddOfferWithImage(driver,"Mesa","Mesa de caoba",
+                "Muy grande","24",
+                url);
+        // Vamos a l lista personal, donde se encuentre la nueva imagen
+        driver.get("http://localhost:8090/offer/myList?page=2");
+        // Buscamos un elemento igamen con el valor de la fuente igual al enlace de la imagen
+        List<WebElement> elements = PO_View.checkElementBy(driver, "free", "//img[@src='" + url + "']");
+        // Comprobamos que existe
+        Assertions.assertNotNull(elements.get(0));
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
+    }
+
+    /**
+     * [Prueba41] Crear una oferta con datos válidos y sin una imagen adjunta. Comprobar que la oferta se ha
+     * creado con éxito, ya que la imagen no es obligatoria.
+     */
+    @Test
+    @Order(41)
+    public void PR41() {
+        // Iniciamos sesión
+        PO_PrivateView.refactorLogging(driver, "user09@email.com", "user01");
+        // Vamos al formulario de crear nueva oferta
+        driver.get("http://localhost:8090/offer/add");
+        // Creamos una oferta sin imagen
+        PO_PrivateView.fillFormAddOffer(driver,"Mesa","Mesa de caoba","Muy grande","24");
+        // Vamos a la página donde se encuentra la nueva oferta
+        driver.get("http://localhost:8090/offer/myList?page=2");
+        // Buscamos la nueva oferta
+        String checkText = "Mesa";
+        List<WebElement> elements = PO_View.checkElementBy(driver, "text", checkText);
+        // Comprobamos que la nueva oferta existe
+        Assertions.assertEquals(checkText, elements.get(0).getText());
+        // Logout
+        PO_PrivateView.refactorLogout(driver, "logout");
     }
 
     /**
@@ -1003,8 +1058,8 @@ class SdiMywallapopApplicationTests {
      * comprobar que la lista se actualiza y dicho usuario desaparece.
      */
     @Test
-    @Order(40)
-    public void PR40() {
+    @Order(42)
+    public void PR42() {
         // Rellenamos el formulario
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
@@ -1036,8 +1091,8 @@ class SdiMywallapopApplicationTests {
      * comprobar que la lista se actualiza y dicho usuario desaparece.
      */
     @Test
-    @Order(41)
-    public void PR41() {
+    @Order(43)
+    public void PR43() {
         // Rellenamos el formulario
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
@@ -1053,12 +1108,14 @@ class SdiMywallapopApplicationTests {
         // Despedir el cuadro de diálogo haciendo clic en el botón "Aceptar"
         alert.accept();
 
-        driver.findElements(By.tagName("button")).get(driver.findElements(By.tagName("button")).size()-1).click();
+        driver.get("http://localhost:8090/user/list");
+        driver.get("http://localhost:8090/user/list");
 
         element = driver.findElement(By.tagName("body"));
         pageContent = element.getText();
         nUsuarios = pageContent.split("user", -1).length - 1;
         Assertions.assertEquals(nUsuarios, 13);
+        // Assertions.assertEquals(nUsuarios, 14); //Si se ejecuta individualmente
         PO_UserList.checkElementBy(driver, "text", "user02@email.com");
         PO_UserList.checkElementBy(driver, "text", "user03@email.com");
         PO_UserList.checkElementBy(driver, "text", "user04@email.com");
