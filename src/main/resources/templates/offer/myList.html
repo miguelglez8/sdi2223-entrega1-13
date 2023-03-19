@@ -22,8 +22,18 @@
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
-                <td><a th:href="${'/offer/delete/' + offer.id}" th:text="#{offer.list.delete}"></a>
-                <td><a th:href="${'/offer/toHighlight/' + offer.id}" th:text="#{offer.list.toHighlight}"></a>
+                <td><a th:href="${'/offer/delete/' + offer.id}" th:text="#{offer.list.delete}"></a></td>
+                <td><a th:href="${'/offer/toHighlight/' + offer.id}" th:text="#{offer.list.toHighlight}"></a></td>
+            </tr>
+            </tbody>
+            <div th:each="error : ${errorsH}">
+                <span class="text-danger" th:if="${error.equals('Error.offer.destacado.money')}"
+                      th:text="#{Error.offer.destacado.money}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.isHighlight')}"
+                      th:text="#{Error.offer.isHighlight}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.user.highlight')}"
+                      th:text="#{Error.offer.user.highlight}"></span>
+            </div>
         </table>
         <div th:if="${#lists.isEmpty(offerList)}" th:text="#{offer.list.msg.offers}"></div>
     </div>
