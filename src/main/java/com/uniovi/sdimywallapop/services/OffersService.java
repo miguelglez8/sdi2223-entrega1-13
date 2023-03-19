@@ -47,7 +47,9 @@ public class OffersService {
 
     public Page<Offer> getOffersForUser(Pageable pageable, User user) {
         Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
-        offers = offersRepository.findAllHighlightOfferByUser(pageable, user.getId());
+        if(user != null){
+            offers = offersRepository.findAllHighlightOfferByUser(pageable, user.getId());
+        }
         return offers;
     }
 

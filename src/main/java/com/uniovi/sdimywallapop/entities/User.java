@@ -17,7 +17,7 @@ public class User {
     private String role;
     private double money;
     private String password;
-    private Boolean active;
+    private boolean active = true;
     @Transient //propiedad que no se almacena en la tabla.
     private String passwordConfirm;
 

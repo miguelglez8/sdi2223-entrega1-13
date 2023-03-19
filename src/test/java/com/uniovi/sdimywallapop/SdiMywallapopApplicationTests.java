@@ -283,7 +283,7 @@ class SdiMywallapopApplicationTests {
         List<WebElement> elementos = PO_UserList.checkElementBy(driver, "class",
                 "checkBox");
 
-        assertTrue(elementos.size() == 15);
+        Assertions.assertEquals(elementos.size(), 16); //15 creados en el init y uno extra de un test anterior
         PO_UserList.checkElementBy(driver, "text", "user01@email.com");
         PO_UserList.checkElementBy(driver, "text", "user02@email.com");
         PO_UserList.checkElementBy(driver, "text", "user03@email.com");

@@ -20,7 +20,7 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private LogoutSuccessHandler logoutSuccessHandler;
+    private CustomLogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
     private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
