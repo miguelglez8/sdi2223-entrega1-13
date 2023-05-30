@@ -13,10 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -148,17 +146,23 @@ public class OffersController {
         return "redirect:/offer/myList";
     }
 
-    @RequestMapping("/offer/toHighlight/{id}")
-    public String toHighlightOffer(@PathVariable Long id,  Principal principal){
+    @RequestMapping(value="/offer/toHighlight/{id}", method = RequestMethod.GET)
+    public String toHighlightOffer(@PathVariable Long id,  Principal principal, Model model,
+                                   Pageable pageable){
         String email = principal.getName();
         User user = usersService.getUserByEmail(email);
-        List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
         Offer offer = offersService.searchById(id);
-        if(offers.contains(id) && user.getMoney() >= 20 && !offer.isDestacado()){
-            usersService.decrementMoney(user, 20);
-            offersService.toHighlightOffer(offer);
+        Page<Offer> offers = offersService.getOffersByUserId(user, pageable);
+        model.addAttribute("offerList", offers.getContent());
+        model.addAttribute("page", offers);
+        model.addAttribute("user", user);
+        List<String> errors = offersService.validateOfferHighlight(offer, user);
+        model.addAttribute("errorsH", errors);
+        if(errors.size() > 0){
+            return "offer/myList";
         }
-
+        usersService.decrementMoney(user, 20);
+        offersService.toHighlightOffer(offer);
         return "redirect:/offer/myList";
     }
 
@@ -171,7 +175,6 @@ public class OffersController {
         if (errors.size() > 0) {
             return "redirect:/offer/myList";
         }
-
         if(offers.contains(id)){
             offersService.deleteOffer(id);
         }

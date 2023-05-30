@@ -42,6 +42,7 @@ public class UsersController {
         model.addAttribute("usersList", usersService.getValidUsers());
         return "user/list";
     }
+
     @RequestMapping(value = "/user/add")
     public String getUser(Model model, Principal principal) {
         String email = principal.getName(); // email es el name de la autenticación
@@ -56,31 +57,28 @@ public class UsersController {
         usersService.addUser(user);
         return "redirect:/user/list";
     }
-    @RequestMapping("/user/details/{id}")
-    public String getDetail(Model model, @PathVariable Long id) {
-        model.addAttribute("user", usersService.getUser(id));
-        return "user/details";
-    }
 
     @PostMapping("/user/delete")
     public String delete(
             @RequestParam(value = "ck", required = false) List<Long> userIds) {
+
         if (userIds == null || userIds.isEmpty()) {
             // No se han seleccionado usuarios para eliminar
             return "redirect:/user/list";
         }
-
         // Elimina los usuarios seleccionados
         usersService.deleteUsers(userIds);
 
         return "redirect:/user/list";
     }
+
     @RequestMapping(value = "/user/edit/{id}")
     public String getEdit(Model model, @PathVariable Long id) {
         User user = usersService.getUser(id);
         model.addAttribute("user", user);
         return "user/edit";
     }
+
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         User originalUser = usersService.getUser(user.getId());
@@ -93,13 +91,14 @@ public class UsersController {
     }
 
     @RequestMapping("/user/list/update")
-    public String updateList(Model model, Principal principal){
-        model.addAttribute("usersList", usersService.getValidUsers() );
+    public String updateList(Model model, Principal principal) {
+        model.addAttribute("usersList", usersService.getValidUsers());
         String email = principal.getName(); // email es el name de la autenticación
         User user = usersService.getUserByEmail(email);
         model.addAttribute("user", user);
         return "user/list :: tableUsers";
     }
+
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signup(@Validated User user, BindingResult result) {
         signUpFormValidator.validate(user, result);
@@ -114,13 +113,14 @@ public class UsersController {
         logServices.addLog(new Log("LOGIN-EX", new Date(), user.getEmail()));
         return "redirect:home";
     }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
         model.addAttribute("user", new User());
         return "login";
     }
 
-    @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/home"}, method = RequestMethod.GET)
     public String home() {
         Authentication auth = SecurityContextHolder.getContext()
                 .getAuthentication();

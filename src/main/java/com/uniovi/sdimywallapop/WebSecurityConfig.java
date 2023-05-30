@@ -20,7 +20,7 @@ import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private LogoutSuccessHandler logoutSuccessHandler;
+    private CustomLogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
     private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/script/**", "/", "/signup", "/login/**").permitAll()
                 .antMatchers("/user/**", "/log/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/offer/**").hasAuthority("ROLE_USER")
+                .antMatchers("/offer/**, /conversation/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

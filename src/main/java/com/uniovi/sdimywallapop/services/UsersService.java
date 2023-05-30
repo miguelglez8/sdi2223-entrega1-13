@@ -17,9 +17,11 @@ public class UsersService {
     private UsersRepository usersRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @PostConstruct
     public void init() {
     }
+
     public List<User> getUsers() {
         List<User> users = new ArrayList<User>();
         usersRepository.findAll().forEach(users::add);
@@ -29,18 +31,16 @@ public class UsersService {
     public List<User> getValidUsers() {
         List<User> users = new ArrayList<User>();
         for (User user : usersRepository.findAllActive()) {
-            if (user.isActive()) {
-                users.add(user);
-            }
+            users.add(user);
         }
         return users;
     }
 
 
-
     public User getUser(Long id) {
         return usersRepository.findById(id).get();
     }
+
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.updateMoney();
@@ -54,6 +54,7 @@ public class UsersService {
     public void deleteUser(Long id) {
         usersRepository.deleteById(id);
     }
+
     public void decrementMoney(User user, double price) {
         user.decrementMoney(price);
         usersRepository.save(user);

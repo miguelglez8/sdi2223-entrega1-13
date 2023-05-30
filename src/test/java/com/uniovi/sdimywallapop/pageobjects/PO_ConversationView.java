@@ -14,7 +14,7 @@ public class PO_ConversationView extends PO_NavView {
         // Seleccionamos buscar
         driver.findElement(By.xpath("//*[@id=\"main-container\"]/form/button")).click();
         // Abrimos la ventana de iniciar conversación
-        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[6]/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"tableOffers\"]/tbody/tr/td[7]/a")).click();
         // Escribimos un mensaje y lo enviamos
         input = driver.findElement(By.name("text"));
         input.click();

@@ -25,7 +25,10 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             String controllerMethodName = handlerMethod.getMethod().getName();
-            String mapping = handlerMethod.getMethodAnnotation(RequestMapping.class).value()[0];
+            String mapping = "";
+            if(handlerMethod.getMethodAnnotation(RequestMapping.class).value().length > 0){
+                mapping = handlerMethod.getMethodAnnotation(RequestMapping.class).value()[0];
+            }
             String message = String.format("Mapeo: %s %s",
                     controllerMethodName, mapping);
             logServices.addLog(new Log("PET", new Date(), message));
