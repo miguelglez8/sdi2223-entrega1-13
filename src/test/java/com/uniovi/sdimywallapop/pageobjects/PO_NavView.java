@@ -5,6 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class PO_NavView extends PO_View{
     /**
      * Clic en una de las opciones principales (a href) y comprueba que se vaya a la vista con el elemento de
@@ -45,6 +48,18 @@ public class PO_NavView extends PO_View{
         List<WebElement> Selectedlanguage = SeleniumUtils.waitLoadElementsBy(driver, "id", textLanguage,
                 getTimeout());
         Selectedlanguage.get(0).click();
+    }
+
+    public static void checkIsAdmin(WebDriver driver) {
+        List<WebElement> elementos = SeleniumUtils.waitLoadElementsBy(driver,
+                "id", "admin", getTimeout());
+        assertTrue(elementos.size() == 1);
+    }
+
+    public static void checkIsUser(WebDriver driver) {
+        List<WebElement> elementos = SeleniumUtils.waitLoadElementsBy(driver,
+                "id", "users", getTimeout());
+        assertTrue(elementos.size() == 2);
     }
 
  }

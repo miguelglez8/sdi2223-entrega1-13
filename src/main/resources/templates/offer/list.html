@@ -13,9 +13,6 @@
         </div>
         <button type="submit" class="btn btn-primary" th:text="#{offer.list.search}"></button>
     </form>
-    <div class="form-group">
-        <h3 th:text="#{offer.list.cash}"> </h3> <h4 th:text="${user.money}"></h4>
-    </div>
     <p th:text="#{offer.list.msg}"></p>
     <button type="button" id="updateButton" class="btn btn-primary" th:text="#{user.list.btn.act}"></button>
     <script th:inline="javascript">
@@ -39,8 +36,6 @@
                 <th scope="col" th:text="#{offer.list.data.details}"></th>
                 <th scope="col" th:text="#{offer.list.data.price}"></th>
                 <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -49,20 +44,23 @@
                 <td th:text="${offer.description}"></td>
                 <td th:text="${offer.details}"></td>
                 <td th:text="${#strings.concat(offer.price,'€')}"></td>
-                <td><a th:href="${'/offer/delete/' + offer.id}">Eliminar</a>
                 <td>
                     <div th:if="${offer.isSold()==false}">
-                        <a th:href="${'/offer/buy/'+offer.id}" th:text="#{offer.list.buy}"></a>
+                        <a th:href="${'/offer/buy?id='+ offer.id + '&page=' + (page != null ? page.getNumber() : '0') +
+                         (searchText != null ? '&searchText=' + searchText : '')}"
+                           th:text="#{offer.list.buy}"></a>
                     </div>
                     <div th:if="${offer.isSold()==true}">
                         <a th:text="#{offer.list.sold}"></a>
                     </div>
                 </td>
-                <td><a th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.start}"></a></td>
+                <td><a th:if="${user != null && !#strings.equals(offer.user.email, user.email)}"
+                       th:href="${'/conversation/start/'+offer.id}" th:text="#{conversation.list.start}"></a></td>
             </tr>
             </tbody>
             <div th:each="error : ${errors}">
-                <span class="text-danger" th:if="${error.equals('Error.offer.price.minus')}" th:text="#{Error.offer.price.minus}"></span>
+                <span class="text-danger" th:if="${error.equals('Error.offer.price.minus')}"
+                      th:text="#{Error.offer.price.minus}"></span>
                 <span class="text-danger" th:if="${error.equals('Error.offer.sold')}" th:text="#{Error.offer.sold}"></span>
                 <span class="text-danger" th:if="${error.equals('Error.offer.user')}" th:text="#{Error.offer.user}"></span>
             </div>

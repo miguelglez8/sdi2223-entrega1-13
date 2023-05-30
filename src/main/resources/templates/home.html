@@ -4,13 +4,13 @@
 <head th:replace="fragments/head"/>
 <body>
 <nav th:replace="fragments/nav"/>
-<div class="container" style="text-align: center">
+<div id="users" class="container" style="text-align: center">
     <h2 th:text="#{welcome.message}"></h2>
-    <h3 th:text="#{welcome.messageprivate}"> </h3>
-    <p th:text="#{welcome.autenticate}">
+    <h3 th:text="#{welcome.messageprivate}"></h3>
 
-        <b th:inline="text" sec:authentication="principal.username"></b>
-    </p>
+    <p th:text="#{welcome.autenticate}"></p>
+    <span sec:authentication="principal.username" th:inline="text"></span>
+
     <p th:text="#{welcome.wallapop}"></p>
 </div>
 <footer th:replace="fragments/footer"/>

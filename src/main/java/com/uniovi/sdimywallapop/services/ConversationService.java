@@ -27,16 +27,19 @@ public class ConversationService {
     }
 
     public Page<Conversation> getConversations(Pageable pageable) {
-        Page<Conversation> conversations = conversationRepository.findAll(pageable);
-        return conversations;
+        return conversationRepository.findAll(pageable);
     }
 
     public Conversation searchById(Long id) {
         return conversationRepository.findById(id).get();
     }
 
-    public Conversation searchByBuyerAndOffer(String buyerDni, Long id) {
-        return conversationRepository.findByBuyerAndOffer(buyerDni, id);
+    public void deleteConversation(Long id) {
+        conversationRepository.deleteById(id);
+    }
+
+    public Conversation searchByBuyerAndOffer(String buyerEmail, Long id) {
+        return conversationRepository.findByBuyerAndOffer(buyerEmail, id);
     }
 
     public void addMessage(Message message) {
@@ -48,10 +51,14 @@ public class ConversationService {
     }
 
     public Conversation searchByUserAndOffer(User user, Offer offer){
-        return conversationRepository.findByUserAndOffer(user.getDni(), offer.getId());
+        return conversationRepository.findByUserAndOffer(user.getEmail(), offer.getId());
     }
 
     public Page<Conversation> searchConversationsTakingPartBy(Pageable pageable, User user) {
-        return conversationRepository.findConversationsByUser(pageable, user.getDni());
+        return conversationRepository.findConversationsByUser(pageable, user.getEmail());
+    }
+
+    public List<Long> searchConversationsTakingPartBy(User user) {
+        return conversationRepository.findConversationsByUser(user.getEmail());
     }
 }

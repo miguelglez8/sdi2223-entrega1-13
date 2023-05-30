@@ -11,14 +11,13 @@ public class User {
     @GeneratedValue
     private Long id;
     @Column(unique = true)
-    private String dni;
+    private String email;
     private String name;
     private String lastName;
     private String role;
     private double money;
     private String password;
-    private String email;
-
+    private Boolean active;
     @Transient //propiedad que no se almacena en la tabla.
     private String passwordConfirm;
 
@@ -33,12 +32,12 @@ public class User {
         this.email = email;
     }
     
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
     private Set<Conversation> conversations;
 
-    public User(String dni, String name, String lastName, String email) {
+    public User(String name, String lastName, String email) {
         super();
-        this.dni = dni;
+        this.active = true;
         this.name = name;
         this.lastName = lastName;
         this.money = 100.0;
@@ -58,12 +57,16 @@ public class User {
     public void setPasswordConfirm(String passwordConfirm) {
         this.passwordConfirm = passwordConfirm;
     }
+    public boolean isActive() {
+        return active;
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
     public User() { }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    public String getDni() {return dni; }
-    public void setDni(String dni) { this.dni = dni; }
     public String getName() {
         return name;
     }
@@ -88,7 +91,7 @@ public class User {
     public Set<Offer> getOffers() {
         return offers;
     }
-    public void setOffers(Set user1Offers) {
+    public void setOffers(Set<Offer> user1Offers) {
         this.offers = user1Offers;
     }
 
@@ -108,4 +111,7 @@ public class User {
         this.money -= price;
     }
 
+    public void updateMoney() {
+        this.setMoney(100.0);
+    }
 }

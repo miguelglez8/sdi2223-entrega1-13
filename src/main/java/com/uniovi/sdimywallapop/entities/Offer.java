@@ -17,7 +17,8 @@ public class Offer {
     private double price;
     private boolean isSold;
     private Long comprador;
-    private String dniComprador;
+    private String emailComprador;
+    private boolean destacado;
 
     public boolean isSold() {
         return isSold;
@@ -46,6 +47,18 @@ public class Offer {
         this.price = price;
         this.isSold = false;
         this.user = user;
+    }
+
+    public Offer(String title, String description, String details, double price, User user, Boolean destacado){
+        super();
+        this.title = title;
+        this.description = description;
+        this.details = details;
+        this.creationDate = new Date();
+        this.price = price;
+        this.isSold = false;
+        this.user = user;
+        this.destacado = destacado;
     }
 
     public Offer(Long id, String title, String description, Date creationDate, String details, double price) {
@@ -122,11 +135,11 @@ public class Offer {
         this.user = user;
     }
 
-    public void setDniComprador(String dni) {
-        this.dniComprador = dni;
+    public void setEmailComprador(String email) {
+        this.emailComprador = email;
     }
-    public String getDniComprador() {
-        return dniComprador;
+    public String getEmailComprador() {
+        return emailComprador;
     }
 
     public Set<Conversation> getConversations() {
@@ -135,5 +148,13 @@ public class Offer {
 
     public void setConversations(Set<Conversation> conversations) {
         this.conversations = conversations;
+    }
+
+    public boolean isDestacado() {
+        return destacado;
+    }
+
+    public void setDestacado(boolean destacado) {
+        this.destacado = destacado;
     }
 }

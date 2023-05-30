@@ -1,20 +1,24 @@
 package com.uniovi.sdimywallapop.controllers;
 
+import com.uniovi.sdimywallapop.entities.Log;
 import com.uniovi.sdimywallapop.entities.User;
-
+import com.uniovi.sdimywallapop.services.LogServices;
 import com.uniovi.sdimywallapop.services.RolesService;
 import com.uniovi.sdimywallapop.services.SecurityService;
 import com.uniovi.sdimywallapop.services.UsersService;
 import com.uniovi.sdimywallapop.validators.SignUpFormValidator;
-import org.springframework.beans.factory.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.Date;
+import java.util.List;
 
 @Controller
 public class UsersController {
@@ -24,17 +28,25 @@ public class UsersController {
     private SignUpFormValidator signUpFormValidator;
     @Autowired
     private UsersService usersService;
+    @Autowired
+    private LogServices logServices;
 
     @Autowired
     private SecurityService securityService;
 
     @RequestMapping("/user/list")
-    public String getListado(Model model) {
-        model.addAttribute("usersList", usersService.getUsers());
+    public String getListado(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
+        model.addAttribute("usersList", usersService.getValidUsers());
         return "user/list";
     }
     @RequestMapping(value = "/user/add")
-    public String getUser(Model model) {
+    public String getUser(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("rolesList", rolesService.getRoles());
         return "user/add";
     }
@@ -49,9 +61,18 @@ public class UsersController {
         model.addAttribute("user", usersService.getUser(id));
         return "user/details";
     }
-    @RequestMapping("/user/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        usersService.deleteUser(id);
+
+    @PostMapping("/user/delete")
+    public String delete(
+            @RequestParam(value = "ck", required = false) List<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            // No se han seleccionado usuarios para eliminar
+            return "redirect:/user/list";
+        }
+
+        // Elimina los usuarios seleccionados
+        usersService.deleteUsers(userIds);
+
         return "redirect:/user/list";
     }
     @RequestMapping(value = "/user/edit/{id}")
@@ -63,7 +84,7 @@ public class UsersController {
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
         User originalUser = usersService.getUser(user.getId());
-        originalUser.setDni(user.getDni());
+        originalUser.setEmail(user.getEmail());
         originalUser.setName(user.getName());
         originalUser.setLastName(user.getLastName());
         //originalUser.setPassword(user.getPassword());
@@ -72,8 +93,11 @@ public class UsersController {
     }
 
     @RequestMapping("/user/list/update")
-    public String updateList(Model model){
-        model.addAttribute("usersList", usersService.getUsers() );
+    public String updateList(Model model, Principal principal){
+        model.addAttribute("usersList", usersService.getValidUsers() );
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         return "user/list :: tableUsers";
     }
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
@@ -81,30 +105,37 @@ public class UsersController {
         signUpFormValidator.validate(user, result);
         if (result.hasErrors()) {
             return "signup";
+        } else {
+            logServices.addLog(new Log("ALTA", new Date(), "Mapeo: signup /signup"));
         }
         user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
-        securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
+        securityService.autoLogin(user.getEmail(), user.getPasswordConfirm());
+        logServices.addLog(new Log("LOGIN-EX", new Date(), user.getEmail()));
         return "redirect:home";
     }
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
-    @RequestMapping(value = {"/home"}, method = RequestMethod.GET)
-    public String home(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String dni = auth.getName();
-        User activeUser = usersService.getUserByDni(dni);
 
-        return "home";
+    @RequestMapping(value = { "/home" }, method = RequestMethod.GET)
+    public String home() {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        String email = auth.getName();
+        User activeUser = usersService.getUserByEmail(email);
+        if (activeUser.getRole().equals("ROLE_ADMIN")) {
+            return "redirect:user/list";
+        } else {
+            return "redirect:offer/myList";
+        }
     }
+
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signup(Model model) {
         model.addAttribute("user", new User());
         return "signup";
     }
-
-
-
 }

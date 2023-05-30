@@ -10,11 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -30,14 +43,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/script/**", "/", "/signup", "/login/**").permitAll()
+                .antMatchers("/user/**", "/log/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/offer/**").hasAuthority("ROLE_USER")
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new CustomAccessDeniedHandler("Error","/unauthorized"))
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .permitAll()
                 .defaultSuccessUrl("/home")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(customAuthenticationFailureHandler)
                 .and()
                 .logout()
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll();
     }
 

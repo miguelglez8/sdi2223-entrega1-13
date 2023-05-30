@@ -13,7 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -33,13 +36,13 @@ public class OffersController {
     @RequestMapping("/offer/list")
     public String getList(Model model, Pageable pageable, Principal principal,
                           @RequestParam(required = false) String searchText){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Page<Offer> offers;
         if (searchText != null && !searchText.isEmpty()) {
             offers = offersService.searchOffersByTitle(pageable, searchText);
         } else {
-            offers = offersService.getOffersForUser(pageable, user);
+            offers = offersService.getOffers(pageable);
         }
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
@@ -49,59 +52,61 @@ public class OffersController {
         return "offer/list";
     }
 
-    @RequestMapping("/offer/ownlist")
-    public String getOwnList(Model model, Pageable pageable, Principal principal,
-                          @RequestParam(required = false) String searchText){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+    @RequestMapping("/offer/myList")
+    public String getMyList(Model model, Pageable pageable, Principal principal){
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Page<Offer> offers;
-        if (searchText != null && !searchText.isEmpty()) {
-            offers = offersService.searchOffersByTitle(pageable, searchText);
-        } else {
-            offers = offersService.getOffersForUser(pageable, user);
-        }
+        offers = offersService.getOffersForUser(pageable, user);
         model.addAttribute("offerList", offers.getContent());
         model.addAttribute("page", offers);
         model.addAttribute("user", user);
-        model.addAttribute("searchText", searchText);
-
-        return "offer/list";
+        return "offer/myList";
     }
 
     @RequestMapping("/offer/list/update")
-    public String updateList(Model model, Pageable pageable) {
+    public String updateList(Model model, Pageable pageable, Principal principal) {
         Page<Offer> offers = offersService.getOffers(pageable);
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("user", user);
         model.addAttribute("offerList", offers.getContent());
         return "offer/list :: tableOffers";
     }
 
     @RequestMapping("/offer/listBuy")
     public String getListBuy(Model model, Principal principal){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
+        model.addAttribute("user", user);
         return "offer/listBuy";
     }
 
     @RequestMapping("/offer/list/updateBuy")
     public String updateListB(Model model, Principal principal) {
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         model.addAttribute("offerListB", offersService.getOffersByUserId(user.getId()));
+        model.addAttribute("user", user);
         return "offer/listBuy :: tableOffersB";
     }
 
     @RequestMapping(value = "/offer/add")
-    public String getOffer(Model model) {
-//        model.addAttribute("usersList", usersService.getUsers());
+    public String getOffer(Model model, Principal principal) {
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
+        model.addAttribute("offerList", offersService.getOffers());
         model.addAttribute("offer", new Offer());
+        model.addAttribute("user", user);
         return "offer/add";
     }
 
-    @RequestMapping(value = "/offer/buy/{id}", method = RequestMethod.GET)
-    public String buyOffer(Model model, Pageable pageable, @PathVariable Long id, Principal principal){
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+    @RequestMapping(value = "/offer/buy", method = RequestMethod.GET)
+    public String buyOffer(Model model, Pageable pageable, @RequestParam Long id, @RequestParam int page,
+                           Principal principal, @RequestParam(required = false) String searchText){
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         Offer offer = offersService.searchById(id);
         Page<Offer> offers = offersService.getOffers(pageable);
         model.addAttribute("offerList", offers.getContent());
@@ -114,27 +119,62 @@ public class OffersController {
         }
         usersService.decrementMoney(user, offer.getPrice());
         offersService.soldOffer(offer, user);
-        return "redirect:/offer/list";
+        if (searchText != null) {
+            return "redirect:/offer/list?page=" + page + "&searchText=" + searchText;
+        }
+        return "redirect:/offer/list?page=" + page;
     }
 
     @RequestMapping(value = "/offer/add", method = RequestMethod.POST)
-    public String setOffer(Model model, @Validated Offer offer, BindingResult result, Principal principal) {
+    public String setOffer(Principal principal, Model model, @Validated Offer offer, BindingResult result) {
         offerFormValidator.validate(offer, result);
+        if (offer.isDestacado()){
+            User user = usersService.getUserByEmail(principal.getName());
+            if(user.getMoney()<20){
+                result.rejectValue("destacado", "Error.offer.destacado.money");
+            } else {
+                usersService.decrementMoney(user, 20);
+            }
+        }
         if (result.hasErrors()) {
-//            model.addAttribute("usersList", usersService.getUsers());
+            model.addAttribute("offerList", offersService.getOffers());
             return "offer/add";
         }
         offer.setCreationDate(new Date());
-        String dni = principal.getName(); // DNI es el name de la autenticación
-        User user = usersService.getUserByDni(dni);
+        String email = principal.getName(); // email es el name de la autenticación
+        User user = usersService.getUserByEmail(email);
         offer.setUser(user);
         offersService.addOffer(offer);
-        return "redirect:/offer/list";
+        return "redirect:/offer/myList";
+    }
+
+    @RequestMapping("/offer/toHighlight/{id}")
+    public String toHighlightOffer(@PathVariable Long id,  Principal principal){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
+        Offer offer = offersService.searchById(id);
+        if(offers.contains(id) && user.getMoney() >= 20 && !offer.isDestacado()){
+            usersService.decrementMoney(user, 20);
+            offersService.toHighlightOffer(offer);
+        }
+
+        return "redirect:/offer/myList";
     }
 
     @RequestMapping("/offer/delete/{id}")
-    public String deleteOffer(@PathVariable Long id){
-        offersService.deleteOffer(id);
-        return "redirect:/offer/list";
+    public String deleteOffer(@PathVariable Long id,  Principal principal){
+        String email = principal.getName();
+        User user = usersService.getUserByEmail(email);
+        List<Long> offers = offersService.getOffersIdsByUserId(user.getId());
+        List<String> errors = offersService.validateOfferToDelete(offersService.getOffer(id), user);
+        if (errors.size() > 0) {
+            return "redirect:/offer/myList";
+        }
+
+        if(offers.contains(id)){
+            offersService.deleteOffer(id);
+        }
+        return "redirect:/offer/myList";
     }
 }

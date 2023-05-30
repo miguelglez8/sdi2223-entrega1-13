@@ -4,6 +4,7 @@ import com.uniovi.sdimywallapop.entities.Offer;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.OffersRepository;
 import com.uniovi.sdimywallapop.validators.OfferBuyValidator;
+import com.uniovi.sdimywallapop.validators.OfferDeleteValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,8 +44,10 @@ public class OffersService {
         offersRepository.deleteById(id);
     }
 
-    public Object getOffersForUser(User user) {
-        return offersRepository.findAllByUser(user);
+    public Page<Offer> getOffersForUser(Pageable pageable, User user) {
+        Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
+        offers = offersRepository.findAllHighlightOfferByUser(pageable, user.getId());
+        return offers;
     }
 
     public Page<Offer> searchOffersByTitle(Pageable pageable, String searchText) {
@@ -56,7 +59,7 @@ public class OffersService {
     public void soldOffer(Offer offer, User user) {
         offer.setSold(true);
         offer.setComprador(user.getId());
-        offer.setDniComprador(user.getDni());
+        offer.setEmailComprador(user.getEmail());
         addOffer(offer);
     }
 
@@ -70,5 +73,18 @@ public class OffersService {
 
     public List<String> validateOffer(Offer offer, User user) {
         return new OfferBuyValidator().validate(offer, user);
+    }
+
+    public List<Long> getOffersIdsByUserId(Long id){
+        return offersRepository.findAllByUserID(id);
+    }
+
+    public void toHighlightOffer(Offer offer){
+        offer.setDestacado(true);
+        offersRepository.save(offer);
+    }
+
+    public List<String> validateOfferToDelete(Offer offer, User user) {
+        return new OfferDeleteValidator().validate(offer, user);
     }
 }

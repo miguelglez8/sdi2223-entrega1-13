@@ -4,9 +4,8 @@ import com.uniovi.sdimywallapop.entities.Conversation;
 import com.uniovi.sdimywallapop.entities.User;
 import com.uniovi.sdimywallapop.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -26,19 +25,30 @@ public class UsersService {
         usersRepository.findAll().forEach(users::add);
         return users;
     }
+
+    public List<User> getValidUsers() {
+        List<User> users = new ArrayList<User>();
+        for (User user : usersRepository.findAllActive()) {
+            if (user.isActive()) {
+                users.add(user);
+            }
+        }
+        return users;
+    }
+
+
+
     public User getUser(Long id) {
         return usersRepository.findById(id).get();
     }
     public void addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.updateMoney();
         usersRepository.save(user);
     }
 
     public void editUser(User user) {
         usersRepository.save(user);
-    }
-    public User getUserByDni(String dni) {
-        return usersRepository.findByDni(dni);
     }
 
     public void deleteUser(Long id) {
@@ -47,6 +57,10 @@ public class UsersService {
     public void decrementMoney(User user, double price) {
         user.decrementMoney(price);
         usersRepository.save(user);
+    }
+
+    public void deleteUsers(List<Long> userIds) {
+        usersRepository.deleteAllById(userIds);
     }
 
     public User getUserByEmail(String email) {

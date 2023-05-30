@@ -1,6 +1,9 @@
 package com.uniovi.sdimywallapop.entities;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Entity
 @Table(name = "message")
@@ -10,6 +13,7 @@ public class Message {
     private Long id;
 
     private String text;
+    private LocalDateTime date;
 
     @ManyToOne
     private User user;
@@ -17,12 +21,13 @@ public class Message {
     @ManyToOne
     private Conversation conversation;
 
-    public Message() { }
+    public Message() { this.date = LocalDateTime.now(); }
 
-    public Message(String text, User user, Conversation conversation) {
+    public Message(String text, User user, Conversation conversation, LocalDateTime date) {
         this.text = text;
         this.user = user;
         this.conversation = conversation;
+        this.date = date;
         conversation.addMessage(this);
     }
 
@@ -56,5 +61,13 @@ public class Message {
 
     public void setConversation(Conversation conversation) {
         this.conversation = conversation;
+    }
+
+    public String getDate() {
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }
