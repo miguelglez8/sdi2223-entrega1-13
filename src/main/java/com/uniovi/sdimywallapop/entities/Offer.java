@@ -17,6 +17,7 @@ public class Offer {
     private double price;
     private boolean isSold;
     private Long comprador;
+    private String dniComprador;
 
     public boolean isSold() {
         return isSold;
@@ -55,6 +56,14 @@ public class Offer {
         this.details = details;
         this.price = price;
         this.isSold = false;
+    }
+
+    public Long getComprador() {
+        return comprador;
+    }
+    
+    public void setComprador(Long id) {
+        this.comprador = id;
     }
 
     public Long getId() {
@@ -113,14 +122,18 @@ public class Offer {
         this.user = user;
     }
 
+    public void setDniComprador(String dni) {
+        this.dniComprador = dni;
+    }
+    public String getDniComprador() {
+        return dniComprador;
+    }
+
     public Set<Conversation> getConversations() {
         return conversations;
     }
 
     public void setConversations(Set<Conversation> conversations) {
         this.conversations = conversations;
-    }
-
-    public void setComprador(Long id) {
     }
 }

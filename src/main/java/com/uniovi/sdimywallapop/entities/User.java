@@ -25,10 +25,17 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Offer> offers;
     
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private Set<Conversation> conversations;
 
-    
     public User(String dni, String name, String lastName, String email) {
         super();
         this.dni = dni;
@@ -37,14 +44,6 @@ public class User {
         this.money = 100.0;
         this.email = email;
         this.conversations = new HashSet<Conversation>();
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -108,4 +107,5 @@ public class User {
     public void decrementMoney(double price) {
         this.money -= price;
     }
+
 }

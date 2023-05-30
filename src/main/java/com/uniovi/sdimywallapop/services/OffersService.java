@@ -20,6 +20,12 @@ public class OffersService {
     @Autowired
     private OffersRepository offersRepository;
 
+    public List<Offer> getOffers() {
+        List<Offer> offers = new ArrayList<Offer>();
+        offersRepository.findAll().forEach(offers::add);
+        return offers;
+    }
+
     public Page<Offer> getOffers(Pageable pageable) {
         Page<Offer> offers = offersRepository.findAll(pageable);
         return offers;
@@ -37,27 +43,20 @@ public class OffersService {
         offersRepository.deleteById(id);
     }
 
-    public Page<Offer> getOffersForUser(Pageable pageable, User user) {
-        Page<Offer> offers = new PageImpl<Offer>(new LinkedList<Offer>());
-        if (user.getRole().equals("ROLE_USER")) {
-            offers = offersRepository.findAllByUser(pageable, user);
-        }
-        if (user.getRole().equals("ROLE_ADMIN")) {
-            offers = getOffers(pageable);
-        }
-        return offers;
+    public Object getOffersForUser(User user) {
+        return offersRepository.findAllByUser(user);
     }
 
     public Page<Offer> searchOffersByTitle(Pageable pageable, String searchText) {
-        Page<Offer> offers = new PageImpl<>(new LinkedList<Offer>());
         searchText = "%"+searchText+"%";
-        offers = offersRepository.searchByTitle(pageable, searchText);
+        Page<Offer> offers = offersRepository.searchByTitle(pageable, searchText);
         return offers;
     }
 
-    public void soldOffer(Offer offer, Long id) {
+    public void soldOffer(Offer offer, User user) {
         offer.setSold(true);
-        offer.setComprador(id);
+        offer.setComprador(user.getId());
+        offer.setDniComprador(user.getDni());
         addOffer(offer);
     }
 

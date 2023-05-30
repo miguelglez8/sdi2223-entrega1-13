@@ -113,7 +113,7 @@ public class OffersController {
             return "offer/list";
         }
         usersService.decrementMoney(user, offer.getPrice());
-        offersService.soldOffer(offer, user.getId());
+        offersService.soldOffer(offer, user);
         return "redirect:/offer/list";
     }
 
